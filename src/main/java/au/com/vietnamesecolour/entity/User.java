@@ -47,11 +47,11 @@ public class User implements UserDetails {
     private String gender;
 
     @Column(name = "enabled")
-    private boolean enabled;
+    private Boolean enabled;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
-            name = "users_role",
+            name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
@@ -99,6 +99,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.isEnabled();
+        return this.getEnabled();
     }
 }
