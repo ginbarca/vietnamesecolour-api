@@ -98,6 +98,10 @@ public class AuthenticationService {
                         request.getPassword()
                 )
         );
+        if (!userRepository.existsUserByUsername(request.getUsername())) {
+            responseData = new ResponseData<>(ResponseStatusCode.NOT_FOUND.getCode(), "Username not found");
+            return responseData;
+        }
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow();
         String jwtToken = jwtService.generateToken(user);
