@@ -1,9 +1,18 @@
 package au.com.vietnamesecolour.service;
 
+import au.com.vietnamesecolour.config.data.ResponseData;
+import au.com.vietnamesecolour.config.data.ResponseStatusCode;
+import au.com.vietnamesecolour.dto.AuthenticationRequestDTO;
+import au.com.vietnamesecolour.dto.AuthenticationResponseDTO;
+import au.com.vietnamesecolour.dto.UserDetailDTO;
 import au.com.vietnamesecolour.dto.UserRegisterRequestDTO;
+import au.com.vietnamesecolour.entity.Role;
+import au.com.vietnamesecolour.entity.Token;
+import au.com.vietnamesecolour.entity.TokenType;
 import au.com.vietnamesecolour.entity.User;
+import au.com.vietnamesecolour.repos.RoleRepository;
+import au.com.vietnamesecolour.repos.TokenRepository;
 import au.com.vietnamesecolour.repos.UserRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,18 +23,34 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
     private final UserRepository repository;
     private final TokenRepository tokenRepository;
+
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register(UserRegisterRequestDTO request) {
+    public ResponseData<AuthenticationResponseDTO> register(UserRegisterRequestDTO request) {
+        ResponseData<AuthenticationResponseDTO> responseData;
+        Set<Role> roleSet = new HashSet<>();
+        for (Integer roleId : request.getRoleIds()) {
+            Optional<Role> role = roleRepository.findById(roleId);
+            if (role.isEmpty()) {
+                responseData = new ResponseData<>(ResponseStatusCode.BAD_REQUEST.getCode(), "There is no role with ID " + roleId);
+                return responseData;
+            }
+            roleSet.add(role.get());
+        }
+        responseData = new ResponseData<>();
         User user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
@@ -34,35 +59,65 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .mobile(request.getMobile())
                 .gender(request.getGender())
-                .roles(Set.of(request.getRole()))
+                .roles(roleSet)
+                .enabled(Boolean.TRUE)
                 .build();
         var savedUser = repository.save(user);
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(savedUser, jwtToken);
-        return AuthenticationResponse.builder()
-                .accessToken(jwtToken)
-                .refreshToken(refreshToken)
-                .build();
+        responseData.setData(
+                AuthenticationResponseDTO.builder()
+                        .accessToken(jwtToken)
+                        .refreshToken(refreshToken)
+                        .userDetailDTO(
+                                UserDetailDTO.builder()
+                                        .firstname(user.getFirstname())
+                                        .lastname(user.getLastname())
+                                        .email(user.getEmail())
+                                        .username(user.getUsername())
+                                        .gender(user.getGender())
+                                        .mobile(user.getMobile())
+                                        .roleName(user.getRoles().stream().map(Role::getName).collect(Collectors.joining(",")))
+                                        .build()
+                        )
+                        .build()
+        );
+        return responseData;
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public ResponseData<AuthenticationResponseDTO> authenticate(AuthenticationRequestDTO request) {
+        ResponseData<AuthenticationResponseDTO> responseData = new ResponseData<>();
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
+                        request.getUsername(),
                         request.getPassword()
                 )
         );
-        var user = repository.findByEmail(request.getEmail())
+        User user = repository.findByUsername(request.getUsername())
                 .orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
+        String jwtToken = jwtService.generateToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
-        return AuthenticationResponse.builder()
-                .accessToken(jwtToken)
-                .refreshToken(refreshToken)
-                .build();
+        responseData.setData(
+                AuthenticationResponseDTO.builder()
+                        .accessToken(jwtToken)
+                        .refreshToken(refreshToken)
+                        .userDetailDTO(
+                                UserDetailDTO.builder()
+                                        .firstname(user.getFirstname())
+                                        .lastname(user.getLastname())
+                                        .email(user.getEmail())
+                                        .username(user.getUsername())
+                                        .gender(user.getGender())
+                                        .mobile(user.getMobile())
+                                        .roleName(user.getRoles().stream().map(Role::getName).collect(Collectors.joining(",")))
+                                        .build()
+                        )
+                        .build()
+        );
+        return responseData;
     }
 
     private void saveUserToken(User user, String jwtToken) {
@@ -87,15 +142,13 @@ public class AuthenticationService {
         tokenRepository.saveAll(validUserTokens);
     }
 
-    public void refreshToken(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws IOException {
+    public ResponseData<AuthenticationResponseDTO> refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        ResponseData<AuthenticationResponseDTO> responseData = new ResponseData<>();
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String refreshToken;
         final String username;
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return;
+            return null;
         }
         refreshToken = authHeader.substring(7);
         username = jwtService.extractUsername(refreshToken);
@@ -103,15 +156,16 @@ public class AuthenticationService {
             var user = this.repository.findByUsername(username)
                     .orElseThrow();
             if (jwtService.isTokenValid(refreshToken, user)) {
-                var accessToken = jwtService.generateToken(user);
+                String accessToken = jwtService.generateToken(user);
                 revokeAllUserTokens(user);
                 saveUserToken(user, accessToken);
-                var authResponse = AuthenticationResponse.builder()
+                AuthenticationResponseDTO authResponse = AuthenticationResponseDTO.builder()
                         .accessToken(accessToken)
                         .refreshToken(refreshToken)
                         .build();
-                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
+                responseData.setData(authResponse);
             }
         }
+        return responseData;
     }
 }

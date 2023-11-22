@@ -49,7 +49,7 @@ public class User implements UserDetails {
     @Column(name = "enabled")
     private Boolean enabled;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -58,7 +58,10 @@ public class User implements UserDetails {
     private Set<Role> roles = new HashSet<>();
 
 //    @OneToMany(mappedBy = "user")
-//    private List<Token> tokens;
+//    private List<UserRole> userRoles;
+
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

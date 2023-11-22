@@ -1,7 +1,6 @@
 package au.com.vietnamesecolour.config.data;
 
 import au.com.vietnamesecolour.constant.DateConstant;
-import au.com.vietnamesecolour.utils.RequestUtils;
 import lombok.Getter;
 
 import java.io.Serializable;
@@ -15,27 +14,26 @@ public class ResponseData<T> implements Serializable {
 
     private final String timestamp;
 
-    private final String service;
-
-    private final String requestId;
-
-    private boolean isEncrypt;
-
     private int code;
 
     private String message;
 
     private T data;
 
-    ResponseData(boolean isEncrypt) {
-        this.code = 0;
+    public ResponseData() {
+        this.code = ResponseStatusCode.OK.getCode();
         this.timestamp =
                 LocalDateTime.now()
                         .format(DateTimeFormatter.ofPattern(DateConstant.STR_PLAN_DD_MM_YYYY_HH_MM_SS));
-        this.message = "Successful!";
-        this.service = RequestUtils.extractServiceName();
-        this.requestId = RequestUtils.extractRequestId();
-        this.isEncrypt = isEncrypt;
+        this.message = ResponseStatusCode.OK.getDescription();
+    }
+
+    public ResponseData(int code, String message) {
+        this.code = code;
+        this.timestamp =
+                LocalDateTime.now()
+                        .format(DateTimeFormatter.ofPattern(DateConstant.STR_PLAN_DD_MM_YYYY_HH_MM_SS));
+        this.message = message;
     }
 
     ResponseData<T> success(T data) {
@@ -60,7 +58,4 @@ public class ResponseData<T> implements Serializable {
         this.data = data;
     }
 
-    public void setEncrypt(boolean encrypt) {
-        isEncrypt = encrypt;
-    }
 }

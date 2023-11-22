@@ -12,8 +12,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -32,7 +32,8 @@ public class SecurityConfiguration {
             "/configuration/security",
             "/swagger-ui/**",
             "/webjars/**",
-            "/swagger-ui.html"};
+            "/swagger-ui.html"
+    };
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
     private final LogoutHandler logoutHandler;
@@ -42,10 +43,10 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
-                        req.requestMatchers(WHITE_LIST_URL)
+                        req.requestMatchers(new AntPathRequestMatcher("/api/v1/auth/**"))
                                 .permitAll()
-                                .requestMatchers("/api/v1/private/order/**").hasAnyRole("ROLE_ADMIN", "ROLE_STAFF")
-                                .requestMatchers("/api/v1/private/**").hasAnyRole("ROLE_ADMIN")
+//                                .requestMatchers("/api/v1/private/order/**").hasAnyRole("ROLE_ADMIN", "ROLE_STAFF")
+                                .requestMatchers(new AntPathRequestMatcher("/api/v1/private/**")).hasAnyRole("ADMIN")
                                 .anyRequest()
                                 .authenticated()
                 )

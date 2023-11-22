@@ -9,14 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRegisterRequestDTO {
-
-    private String firstname;
-    private String lastname;
-    private String email;
+public class AuthenticationRequestDTO {
     private String username;
     private String password;
-    private String mobile;
-    private String gender;
-    private Integer[] roleIds;
 }

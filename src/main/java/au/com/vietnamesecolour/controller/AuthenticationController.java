@@ -1,5 +1,9 @@
 package au.com.vietnamesecolour.controller;
 
+import au.com.vietnamesecolour.config.data.ResponseData;
+import au.com.vietnamesecolour.dto.AuthenticationRequestDTO;
+import au.com.vietnamesecolour.dto.AuthenticationResponseDTO;
+import au.com.vietnamesecolour.dto.UserRegisterRequestDTO;
 import au.com.vietnamesecolour.service.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,26 +24,18 @@ public class AuthenticationController {
     private final AuthenticationService service;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody RegisterRequest request
-    ) {
+    public ResponseEntity<ResponseData<AuthenticationResponseDTO>> register(@RequestBody UserRegisterRequestDTO request) {
         return ResponseEntity.ok(service.register(request));
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody AuthenticationRequest request
-    ) {
+    public ResponseEntity<ResponseData<AuthenticationResponseDTO>> authenticate(@RequestBody AuthenticationRequestDTO request) {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
     @PostMapping("/refresh-token")
-    public void refreshToken(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws IOException {
-        service.refreshToken(request, response);
+    public ResponseEntity<ResponseData<AuthenticationResponseDTO>> refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        return ResponseEntity.ok(service.refreshToken(request, response));
     }
-
 
 }
