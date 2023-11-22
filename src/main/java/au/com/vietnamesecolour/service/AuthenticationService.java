@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-    private final UserRepository repository;
+    private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
 
     private final RoleRepository roleRepository;
@@ -42,6 +42,10 @@ public class AuthenticationService {
     public ResponseData<AuthenticationResponseDTO> register(UserRegisterRequestDTO request) {
         ResponseData<AuthenticationResponseDTO> responseData;
         Set<Role> roleSet = new HashSet<>();
+        if (userRepository.existsUserByUsername(request.getUsername())) {
+            responseData = new ResponseData<>(ResponseStatusCode.CONFLICT.getCode(), "Username already registered");
+            return responseData;
+        }
         for (Integer roleId : request.getRoleIds()) {
             Optional<Role> role = roleRepository.findById(roleId);
             if (role.isEmpty()) {
@@ -62,7 +66,7 @@ public class AuthenticationService {
                 .roles(roleSet)
                 .enabled(Boolean.TRUE)
                 .build();
-        var savedUser = repository.save(user);
+        var savedUser = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(savedUser, jwtToken);
@@ -94,7 +98,7 @@ public class AuthenticationService {
                         request.getPassword()
                 )
         );
-        User user = repository.findByUsername(request.getUsername())
+        User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow();
         String jwtToken = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
@@ -153,7 +157,7 @@ public class AuthenticationService {
         refreshToken = authHeader.substring(7);
         username = jwtService.extractUsername(refreshToken);
         if (username != null) {
-            var user = this.repository.findByUsername(username)
+            var user = this.userRepository.findByUsername(username)
                     .orElseThrow();
             if (jwtService.isTokenValid(refreshToken, user)) {
                 String accessToken = jwtService.generateToken(user);
