@@ -1,4 +1,4 @@
-package au.com.vietnamesecolour.config;
+package au.com.vietnamesecolour.config.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package au.com.vietnamesecolour.config;
+package au.com.vietnamesecolour.config.security;
 
 import au.com.vietnamesecolour.repos.TokenRepository;
 import au.com.vietnamesecolour.service.JwtService;
