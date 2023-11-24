@@ -3,6 +3,8 @@ package au.com.vietnamesecolour.config.exception;
 import au.com.vietnamesecolour.config.data.ResponseData;
 import au.com.vietnamesecolour.config.data.ResponseUtils;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -28,12 +30,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.io.IOException;
 import java.nio.file.AccessDeniedException;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @RestController
 @ControllerAdvice
@@ -288,6 +293,42 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return this.handleError(CommonErrorCode.EXECUTE_THIRTY_SERVICE_ERROR);
     }
 
+    /**
+     * Handles ConstraintViolationException
+     *
+     * @param ex the exception
+     * @return a {@code ResponseEntity} instance
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    protected ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("time", LocalDateTime.now()
+                .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        body.put("code", HttpStatus.BAD_REQUEST.value());
+        List<String> errors = ex.getConstraintViolations()
+                .stream()
+                .map(ConstraintViolation::getMessage)
+                .toList();
+        body.put("message", errors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
+    /**
+     * Handles MultipartException
+     *
+     * @param ex the exception
+     * @return a {@code ResponseEntity} instance
+     */
+    @ExceptionHandler(MultipartException.class)
+    protected ResponseEntity<Object> handleMultipartException(MultipartException ex) throws IOException {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("time", LocalDateTime.now()
+                .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        body.put("code", HttpStatus.BAD_REQUEST.value());
+        List<String> errors = Arrays.asList(ex.getMessage());
+        body.put("message", errors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
     /**
      * Handles Exception
      *

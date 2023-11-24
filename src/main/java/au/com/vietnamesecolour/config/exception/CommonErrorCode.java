@@ -52,7 +52,8 @@ public enum CommonErrorCode implements AbstractError {
     REFRESH_TOKEN_EXPIRED(
             17, "The refresh token expired, requires login again!", HttpStatus.UNAUTHORIZED),
     EXECUTE_THIRTY_SERVICE_ERROR(
-            18, "An error occurred while executing the 3rd party api!", HttpStatus.INTERNAL_SERVER_ERROR);
+            18, "An error occurred while executing the 3rd party api!", HttpStatus.INTERNAL_SERVER_ERROR),
+    DATA_NOT_FOUND(19, "Data not found", HttpStatus.NOT_FOUND);
 
     private final int code;
 
