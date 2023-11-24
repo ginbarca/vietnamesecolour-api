@@ -272,7 +272,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         LOGGER.error(ex.getLocalizedMessage(), ex);
         int code = ex.getCode();
         HttpStatus httpStatus = ex.getHttpStatus();
-        return ResponseUtils.error(code, ex.getMessage(), subErrors, httpStatus);
+        return ResponseUtils.status(code, ex.getMessage(), subErrors, httpStatus);
     }
 
     /**
@@ -320,7 +320,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             message = String.format(message, messageArg);
         }
         HttpStatus httpStatus = commonError.getHttpStatus();
-        return ResponseUtils.error(code, message, subErrors, httpStatus);
+        return ResponseUtils.status(code, message, subErrors, httpStatus);
     }
 
     private List<SubError> getSubErrors(MethodArgumentNotValidException e) {

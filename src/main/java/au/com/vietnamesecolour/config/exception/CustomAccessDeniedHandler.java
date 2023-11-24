@@ -2,8 +2,6 @@ package au.com.vietnamesecolour.config.exception;
 
 import au.com.vietnamesecolour.config.data.ResponseStatusCode;
 import au.com.vietnamesecolour.config.data.ResponseUtils;
-import au.com.vietnamesecolour.config.exception.CommonErrorCode;
-import au.com.vietnamesecolour.utils.JsonUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,7 +43,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         final ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(
                 response.getOutputStream(),
-                ResponseUtils.error(errorCode.getCode(), errorCode.getDescription(), HttpStatus.FORBIDDEN)
+                ResponseUtils.status(errorCode.getCode(), errorCode.getDescription(), HttpStatus.FORBIDDEN)
         );
 //        response
 //                .getWriter()

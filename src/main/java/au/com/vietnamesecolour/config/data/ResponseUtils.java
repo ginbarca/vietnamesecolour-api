@@ -34,12 +34,12 @@ public class ResponseUtils {
 //                .body(new ResponseData<T>(isEncrypt).success(o));
 //    }
 
-    public static <T> ResponseEntity<ResponseData<T>> error(
+    public static <T> ResponseEntity<ResponseData<T>> status(
             int code, String message, HttpStatus status) {
         return ResponseEntity.status(status).body(getResponseDataError(code, message, null));
     }
 
-    public static <T> ResponseEntity<ResponseData<T>> error(
+    public static <T> ResponseEntity<ResponseData<T>> status(
             int code, String message, T data, HttpStatus status) {
         return ResponseEntity.status(status).body(getResponseDataError(code, message, data));
     }

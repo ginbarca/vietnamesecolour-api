@@ -1,7 +1,5 @@
 package au.com.vietnamesecolour.config.exception;
 
-import java.io.IOException;
-
 import au.com.vietnamesecolour.config.data.ResponseStatusCode;
 import au.com.vietnamesecolour.config.data.ResponseUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,8 +14,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
-import static au.com.vietnamesecolour.config.data.ResponseUtils.getResponseDataError;
-import static au.com.vietnamesecolour.utils.JsonUtils.toJson;
+import java.io.IOException;
 
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
@@ -36,7 +33,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         final ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(
                 response.getOutputStream(),
-                ResponseUtils.error(errorCode.getCode(), errorCode.getDescription(), HttpStatus.UNAUTHORIZED)
+                ResponseUtils.status(errorCode.getCode(), errorCode.getDescription(), HttpStatus.UNAUTHORIZED)
         );
 //        response.getWriter()
 //                .print(

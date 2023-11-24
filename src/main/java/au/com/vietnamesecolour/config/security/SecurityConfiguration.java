@@ -12,7 +12,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -22,7 +21,9 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableMethodSecurity
 public class SecurityConfiguration {
 
-    private static final String[] WHITE_LIST_URL = {"/api/v1/auth/**",
+    private static final String[] WHITE_LIST_URL = {
+            "/api/v1/auth/**",
+            "/api/v1/public/**",
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
@@ -43,10 +44,10 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
-                        req.requestMatchers(new AntPathRequestMatcher("/api/v1/auth/**"))
+                        req.requestMatchers(WHITE_LIST_URL)
                                 .permitAll()
-//                                .requestMatchers("/api/v1/private/order/**").hasAnyRole("ROLE_ADMIN", "ROLE_STAFF")
-                                .requestMatchers(new AntPathRequestMatcher("/api/v1/private/**")).hasAnyRole("ADMIN")
+                                .requestMatchers("/api/v1/private/order/**").hasAnyRole("ADMIN", "STAFF")
+                                .requestMatchers("/api/v1/private/**").hasAnyRole("ADMIN")
                                 .anyRequest()
                                 .authenticated()
                 )
