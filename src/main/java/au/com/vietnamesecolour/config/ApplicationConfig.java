@@ -1,6 +1,7 @@
 package au.com.vietnamesecolour.config;
 
 import au.com.vietnamesecolour.config.auditing.ApplicationAuditAware;
+import au.com.vietnamesecolour.entity.User;
 import au.com.vietnamesecolour.repos.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -35,7 +36,7 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public AuditorAware<Integer> auditorAware() {
+    public AuditorAware<User> auditorAware() {
         return new ApplicationAuditAware();
     }
 
