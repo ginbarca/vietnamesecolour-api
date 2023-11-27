@@ -86,6 +86,11 @@ public class UnitServiceImpl implements UnitService {
         return responseData;
     }
 
+    @Override
+    public Boolean isUnitExist(Integer id) {
+        return unitRepo.existsById(id);
+    }
+
     private ResponseData<UnitDTO> persistUnit(UnitDTO payload) {
         Unit unit = Unit.builder().unitName(payload.getUnitName()).build();
         Unit savedUnit = unitRepo.save(unit);

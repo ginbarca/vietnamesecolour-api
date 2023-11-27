@@ -9,6 +9,6 @@ public interface DishGroupService {
     ResponseData<DishGroupDTO> createDishGroup(DishGroupDTO payload);
     ResponseData<DishGroupDTO> updateDishGroup(DishGroupDTO payload);
     ResponseData<Void> deleteDishGroupById(Integer id);
-    ResponseData<DishGroupDTO> getDishGroupById(DishGroupDTO payload);
-    ResponsePage<DishGroupDTO> findDishGroup(DishGroupDTO payload);
+    ResponseData<DishGroupDTO> getDishGroupById(Integer id);
+    ResponseData<ResponsePage<DishGroupDTO>> findDishGroup(String unitName, Integer page, Integer pageSize);
 }

@@ -3,6 +3,7 @@ package au.com.vietnamesecolour.controller;
 import au.com.vietnamesecolour.config.data.ResponseData;
 import au.com.vietnamesecolour.config.data.ResponsePage;
 import au.com.vietnamesecolour.config.data.ResponseUtils;
+import au.com.vietnamesecolour.config.exception.CommonErrorCode;
 import au.com.vietnamesecolour.dto.UnitDTO;
 import au.com.vietnamesecolour.service.UnitService;
 import jakarta.validation.Valid;
@@ -38,16 +39,20 @@ public class UnitController {
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
-    @PatchMapping
-    public ResponseEntity<ResponseData<UnitDTO>> updateUnit(@RequestBody UnitDTO payload) {
-        ResponseData<UnitDTO> responseData = unitService.updateUnit(payload);
-        return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
+    @PatchMapping("/{id}")
+    public ResponseEntity<ResponseData<UnitDTO>> updateUnit(
+            @Valid @NotNull @PathVariable(name = "id") Integer id,
+            @RequestBody UnitDTO payload
+    ) {
+        if (unitService.isUnitExist(id)) {
+            ResponseData<UnitDTO> responseData = unitService.updateUnit(payload);
+            return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
+        }
+        return ResponseUtils.status(CommonErrorCode.DATA_NOT_FOUND.getCode(), CommonErrorCode.DATA_NOT_FOUND.getMessage(), null, CommonErrorCode.DATA_NOT_FOUND.getHttpStatus());
     }
 
-    @DeleteMapping
-    public ResponseEntity<ResponseData<Void>> deleteUnitById(
-            @RequestParam(name = "id") Integer id
-    ) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseData<Void>> deleteUnitById(@Valid @NotNull @PathVariable(name = "id") Integer id) {
         ResponseData<Void> responseData = unitService.deleteUnitById(id);
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
