@@ -30,18 +30,55 @@ public class UnitServiceImpl implements UnitService {
 
     @Override
     public ResponseData<UnitDTO> createUnit(UnitDTO payload) {
-        return persistUnit(payload);
+        Unit unit = Unit.builder().unitName(payload.getUnitName()).build();
+        Unit savedUnit = unitRepo.save(unit);
+        UnitDTO dto = UnitDTO.builder()
+                .id(savedUnit.getId())
+                .unitName(savedUnit.getUnitName())
+                .createdBy(savedUnit.getCreatedBy().getUsername())
+                .updatedBy(savedUnit.getUpdatedBy().getUsername())
+                .createdDate(DateTimeUtils.formatDate(savedUnit.getCreatedDate(), DateConstant.STR_PLAN_DD_MM_YYYY_HH_MM_SS))
+                .updatedDate(DateTimeUtils.formatDate(savedUnit.getUpdatedDate(), DateConstant.STR_PLAN_DD_MM_YYYY_HH_MM_SS))
+                .build();
+        ResponseData<UnitDTO> responseData = new ResponseData<>(ResponseStatusCode.CREATED.getCode(), ResponseStatusCode.CREATED.getDescription());
+        responseData.setData(dto);
+        return responseData;
     }
 
     @Override
-    public ResponseData<UnitDTO> updateUnit(UnitDTO payload) {
-        return persistUnit(payload);
+    public ResponseData<UnitDTO> updateUnit(Integer id, UnitDTO payload) {
+        Optional<Unit> unit = unitRepo.findById(id);
+        ResponseData<UnitDTO> responseData;
+        if (unit.isPresent()) {
+            unit.get().setUnitName(payload.getUnitName());
+            Unit savedUnit = unitRepo.save(unit.get());
+            UnitDTO dto = UnitDTO.builder()
+                    .id(savedUnit.getId())
+                    .unitName(savedUnit.getUnitName())
+                    .createdBy(savedUnit.getCreatedBy().getUsername())
+                    .updatedBy(savedUnit.getUpdatedBy().getUsername())
+                    .createdDate(DateTimeUtils.formatDate(savedUnit.getCreatedDate(), DateConstant.STR_PLAN_DD_MM_YYYY_HH_MM_SS))
+                    .updatedDate(DateTimeUtils.formatDate(savedUnit.getUpdatedDate(), DateConstant.STR_PLAN_DD_MM_YYYY_HH_MM_SS))
+                    .build();
+            responseData = new ResponseData<>();
+            responseData.setData(dto);
+            return responseData;
+        }
+        responseData = new ResponseData<>(ResponseStatusCode.NOT_FOUND.getCode(), CommonErrorCode.DATA_NOT_FOUND.getMessage());
+        return responseData;
     }
 
     @Override
     public ResponseData<Void> deleteUnitById(Integer id) {
-        unitRepo.deleteById(id);
-        return new ResponseData<>();
+        Optional<Unit> unit = unitRepo.findById(id);
+        ResponseData<Void> responseData;
+        if (unit.isPresent()) {
+            unitRepo.deleteById(id);
+            responseData = new ResponseData<>(ResponseStatusCode.OK.getCode(), ResponseStatusCode.OK.getDescription());
+            return responseData;
+        }
+        responseData = new ResponseData<>(ResponseStatusCode.NOT_FOUND.getCode(), CommonErrorCode.DATA_NOT_FOUND.getMessage());
+        return responseData;
     }
 
     @Override
@@ -91,19 +128,4 @@ public class UnitServiceImpl implements UnitService {
         return unitRepo.existsById(id);
     }
 
-    private ResponseData<UnitDTO> persistUnit(UnitDTO payload) {
-        Unit unit = Unit.builder().unitName(payload.getUnitName()).build();
-        Unit savedUnit = unitRepo.save(unit);
-        UnitDTO dto = UnitDTO.builder()
-                .id(savedUnit.getId())
-                .unitName(savedUnit.getUnitName())
-                .createdBy(savedUnit.getCreatedBy().getUsername())
-                .updatedBy(savedUnit.getUpdatedBy().getUsername())
-                .createdDate(DateTimeUtils.formatDate(savedUnit.getCreatedDate(), DateConstant.STR_PLAN_DD_MM_YYYY_HH_MM_SS))
-                .updatedDate(DateTimeUtils.formatDate(savedUnit.getUpdatedDate(), DateConstant.STR_PLAN_DD_MM_YYYY_HH_MM_SS))
-                .build();
-        ResponseData<UnitDTO> responseData = new ResponseData<>();
-        responseData.setData(dto);
-        return responseData;
-    }
 }

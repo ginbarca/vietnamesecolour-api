@@ -2,6 +2,7 @@ package au.com.vietnamesecolour.controller;
 
 import au.com.vietnamesecolour.config.data.ResponseData;
 import au.com.vietnamesecolour.config.data.ResponsePage;
+import au.com.vietnamesecolour.config.data.ResponseStatusCode;
 import au.com.vietnamesecolour.config.data.ResponseUtils;
 import au.com.vietnamesecolour.config.exception.CommonErrorCode;
 import au.com.vietnamesecolour.dto.UnitDTO;
@@ -44,11 +45,8 @@ public class UnitController {
             @Valid @NotNull @PathVariable(name = "id") Integer id,
             @RequestBody UnitDTO payload
     ) {
-        if (unitService.isUnitExist(id)) {
-            ResponseData<UnitDTO> responseData = unitService.updateUnit(payload);
-            return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
-        }
-        return ResponseUtils.status(CommonErrorCode.DATA_NOT_FOUND.getCode(), CommonErrorCode.DATA_NOT_FOUND.getMessage(), null, CommonErrorCode.DATA_NOT_FOUND.getHttpStatus());
+        ResponseData<UnitDTO> responseData = unitService.updateUnit(id, payload);
+        return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
     @DeleteMapping("/{id}")
