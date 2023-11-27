@@ -68,7 +68,8 @@ public class UnitServiceImpl implements UnitService {
     }
 
     @Override
-    public ResponsePage<UnitDTO> findUnit(String unitName, Integer page, Integer pageSize) {
+    public ResponseData<ResponsePage<UnitDTO>> findUnit(String unitName, Integer page, Integer pageSize) {
+        ResponseData<ResponsePage<UnitDTO>> responseData = new ResponseData<>();
         Pageable pageable = PageRequest.of(page - 1, pageSize);
         Page<Unit> unitPage = unitRepo.findUnitByUnitName(unitName, pageable);
 
@@ -81,7 +82,8 @@ public class UnitServiceImpl implements UnitService {
                 unitPage.getTotalPages(),
                 unitDTOS
         );
-        return responsePage;
+        responseData.setData(responsePage);
+        return responseData;
     }
 
     private ResponseData<UnitDTO> persistUnit(UnitDTO payload) {

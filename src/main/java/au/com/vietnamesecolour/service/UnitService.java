@@ -10,5 +10,5 @@ public interface UnitService {
     ResponseData<UnitDTO> updateUnit(UnitDTO payload);
     ResponseData<Void> deleteUnitById(Integer id);
     ResponseData<UnitDTO> getUnitById(Integer id);
-    ResponsePage<UnitDTO> findUnit(String unitName, Integer page, Integer pageSize);
+    ResponseData<ResponsePage<UnitDTO>> findUnit(String unitName, Integer page, Integer pageSize);
 }
