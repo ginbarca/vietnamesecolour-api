@@ -16,7 +16,11 @@ public class DishInfoDTO {
     private String dishDescription;
     private String dishImagePath;
     private String dishGroupName;
+//    @JsonIgnore
+    private Integer dishGroupId;
     private String unitName;
+//    @JsonIgnore
+    private Integer unitId;
     private String createdDate;
     private String updatedDate;
     private String createdBy;
