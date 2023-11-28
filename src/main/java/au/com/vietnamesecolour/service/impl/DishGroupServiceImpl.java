@@ -30,18 +30,55 @@ public class DishGroupServiceImpl implements DishGroupService {
 
     @Override
     public ResponseData<DishGroupDTO> createDishGroup(DishGroupDTO payload) {
-        return persistDishGroup(payload);
+        DishGroup dishGroup = DishGroup.builder().dishGroupName(payload.getDishGroupName()).build();
+        DishGroup savedDishGroup = dishGroupRepo.save(dishGroup);
+        DishGroupDTO dto = DishGroupDTO.builder()
+                .id(savedDishGroup.getId())
+                .dishGroupName(savedDishGroup.getDishGroupName())
+                .createdBy(savedDishGroup.getCreatedBy().getUsername())
+                .updatedBy(savedDishGroup.getUpdatedBy().getUsername())
+                .createdDate(DateTimeUtils.formatDate(savedDishGroup.getCreatedDate(), DateConstant.STR_PLAN_DD_MM_YYYY_HH_MM_SS))
+                .updatedDate(DateTimeUtils.formatDate(savedDishGroup.getUpdatedDate(), DateConstant.STR_PLAN_DD_MM_YYYY_HH_MM_SS))
+                .build();
+        ResponseData<DishGroupDTO> responseData = new ResponseData<>(ResponseStatusCode.CREATED.getCode(), ResponseStatusCode.CREATED.getDescription());
+        responseData.setData(dto);
+        return responseData;
     }
 
     @Override
-    public ResponseData<DishGroupDTO> updateDishGroup(DishGroupDTO payload) {
-        return persistDishGroup(payload);
+    public ResponseData<DishGroupDTO> updateDishGroup(Integer id, DishGroupDTO payload) {
+        Optional<DishGroup> dishGroup = dishGroupRepo.findById(id);
+        ResponseData<DishGroupDTO> responseData;
+        if (dishGroup.isPresent()) {
+            dishGroup.get().setDishGroupName(payload.getDishGroupName());
+            DishGroup savedDishGroup = dishGroupRepo.save(dishGroup.get());
+            DishGroupDTO dto = DishGroupDTO.builder()
+                    .id(savedDishGroup.getId())
+                    .dishGroupName(savedDishGroup.getDishGroupName())
+                    .createdBy(savedDishGroup.getCreatedBy().getUsername())
+                    .updatedBy(savedDishGroup.getUpdatedBy().getUsername())
+                    .createdDate(DateTimeUtils.formatDate(savedDishGroup.getCreatedDate(), DateConstant.STR_PLAN_DD_MM_YYYY_HH_MM_SS))
+                    .updatedDate(DateTimeUtils.formatDate(savedDishGroup.getUpdatedDate(), DateConstant.STR_PLAN_DD_MM_YYYY_HH_MM_SS))
+                    .build();
+            responseData = new ResponseData<>();
+            responseData.setData(dto);
+            return responseData;
+        }
+        responseData = new ResponseData<>(ResponseStatusCode.NOT_FOUND.getCode(), CommonErrorCode.DATA_NOT_FOUND.getMessage());
+        return responseData;
     }
 
     @Override
     public ResponseData<Void> deleteDishGroupById(Integer id) {
-        dishGroupRepo.deleteById(id);
-        return new ResponseData<>();
+        Optional<DishGroup> dishGroup = dishGroupRepo.findById(id);
+        ResponseData<Void> responseData;
+        if (dishGroup.isPresent()) {
+            dishGroupRepo.deleteById(id);
+            responseData = new ResponseData<>(ResponseStatusCode.OK.getCode(), ResponseStatusCode.OK.getDescription());
+            return responseData;
+        }
+        responseData = new ResponseData<>(ResponseStatusCode.NOT_FOUND.getCode(), CommonErrorCode.DATA_NOT_FOUND.getMessage());
+        return responseData;
     }
 
     @Override
@@ -83,22 +120,6 @@ public class DishGroupServiceImpl implements DishGroupService {
                 dishGroupDTOS
         );
         responseData.setData(responsePage);
-        return responseData;
-    }
-
-    private ResponseData<DishGroupDTO> persistDishGroup(DishGroupDTO payload) {
-        DishGroup dishGroup = DishGroup.builder().dishGroupName(payload.getDishGroupName()).build();
-        DishGroup savedDishGroup = dishGroupRepo.save(dishGroup);
-        DishGroupDTO dto = DishGroupDTO.builder()
-                .id(savedDishGroup.getId())
-                .dishGroupName(savedDishGroup.getDishGroupName())
-                .createdBy(savedDishGroup.getCreatedBy().getUsername())
-                .updatedBy(savedDishGroup.getUpdatedBy().getUsername())
-                .createdDate(DateTimeUtils.formatDate(savedDishGroup.getCreatedDate(), DateConstant.STR_PLAN_DD_MM_YYYY_HH_MM_SS))
-                .updatedDate(DateTimeUtils.formatDate(savedDishGroup.getUpdatedDate(), DateConstant.STR_PLAN_DD_MM_YYYY_HH_MM_SS))
-                .build();
-        ResponseData<DishGroupDTO> responseData = new ResponseData<>();
-        responseData.setData(dto);
         return responseData;
     }
 }
