@@ -135,15 +135,16 @@ public class DishInfoServiceImpl implements DishInfoService {
     @Override
     public Resource loadAsResource(String filename) {
         try {
-            Path file = this.rootLocation.resolve(filename);
+            Path file = rootLocation.resolve(filename);
             Resource resource = new UrlResource(file.toUri());
+
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new InputMismatchException("Could not read file: " + filename);
+                throw new RuntimeException("Could not read the file!");
             }
         } catch (MalformedURLException e) {
-            throw new InputMismatchException("Could not read file: " + filename);
+            throw new RuntimeException("Error: " + e.getMessage());
         }
     }
 }

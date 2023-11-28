@@ -52,25 +52,4 @@ public class DishInfoController {
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
-    @GetMapping("/files/{filename:.+}")
-    @ResponseBody
-    public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
-
-        Resource file = dishInfoService.loadAsResource(filename);
-
-        if (file == null)
-            return ResponseEntity.notFound().build();
-
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
-    }
-    @GetMapping(value = "/get-file-via-byte-array-resource", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    @ResponseBody
-    public Resource getFileViaByteArrayResource(@PathVariable String filename) throws IOException, URISyntaxException {
-        Path path = Paths.get("uploads/").resolve(filename);
-        ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
-        Resource file = dishInfoService.loadAsResource(filename);
-        return resource;
-    }
-
 }
