@@ -28,7 +28,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,16 +40,16 @@ public class DishInfoServiceImpl implements DishInfoService {
     private final UnitRepository unitRepository;
 
 
-    @Value("${application.upload-dir}")
-    private String uploadDir;
+    private final String uploadDir;
     private Path rootLocation;
 
     @Autowired
-    public DishInfoServiceImpl(DishInfoRepository dishInfoRepository, DishGroupRepository groupRepository, UnitRepository unitRepository) {
+    public DishInfoServiceImpl(DishInfoRepository dishInfoRepository, DishGroupRepository groupRepository, UnitRepository unitRepository, @Value("${application.upload-dir}") String uploadDir) {
         this.dishInfoRepository = dishInfoRepository;
         this.groupRepository = groupRepository;
         this.unitRepository = unitRepository;
-        this.rootLocation = Paths.get("uploads/");
+        this.uploadDir = uploadDir;
+        this.rootLocation = Paths.get(uploadDir);
     }
 
     @Override
@@ -83,6 +82,7 @@ public class DishInfoServiceImpl implements DishInfoService {
                         .price(payload.getPrice())
                         .dishDescription(payload.getDishDescription())
                         .dishImagePath(this.rootLocation.resolve(imageFile.getOriginalFilename()).toString())
+                        .dishImageName(imageFile.getOriginalFilename())
                         .dishGroup(groupRepository.findById(payload.getDishGroupId()).get())
                         .unit(unitRepository.findById(payload.getUnitId()).get())
                         .build();
