@@ -31,6 +31,9 @@ public class DishInfo extends Auditable {
     @Column(name = "dish_image_path")
     private String dishImagePath;
 
+    @Column(name = "dish_image_name")
+    private String dishImageName;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dish_group_id")
     private DishGroup dishGroup;
