@@ -1,0 +1,68 @@
+package au.com.vietnamesecolour.controller;
+
+import au.com.vietnamesecolour.config.data.ResponseData;
+import au.com.vietnamesecolour.config.data.ResponsePage;
+import au.com.vietnamesecolour.config.data.ResponseUtils;
+import au.com.vietnamesecolour.dto.TableBookingDTO;
+import au.com.vietnamesecolour.service.TableBookingService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.text.ParseException;
+
+@RestController
+@RequestMapping("/api/v1/private/table-bookings")
+@RequiredArgsConstructor
+@Validated
+public class TableBookingController {
+    
+    private final TableBookingService bookingService;
+
+    @GetMapping
+    public ResponseEntity<ResponseData<ResponsePage<TableBookingDTO>>> findTableBooking(
+            @RequestParam(name = "customerName", required = false) String customerName,
+            @RequestParam(name = "mobileNumber", required = false) String mobileNumber,
+            @RequestParam(name = "email", required = false) String email,
+            @RequestParam(name = "bookingDateFrom", required = false) String bookingDateFrom,
+            @RequestParam(name = "bookingDateTo", required = false) String bookingDateTo,
+            @Valid @Min(value = 1, message = "Page must be start from 1") @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
+            @Valid @Min(value = 1, message = "Page size must be start from 1") @RequestParam(name = "pageSize", required = false, defaultValue = "10") Integer pageSize
+    ) {
+        ResponseData<ResponsePage<TableBookingDTO>> responseData = bookingService.findTableBooking(customerName, mobileNumber, email, bookingDateFrom, bookingDateTo, page, pageSize);
+        return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
+    }
+
+    @PostMapping
+    public ResponseEntity<ResponseData<TableBookingDTO>> createTableBooking(
+            @Valid @RequestBody TableBookingDTO bookingDTO
+    ) throws ParseException {
+        ResponseData<TableBookingDTO> responseData = bookingService.createTableBooking(bookingDTO);
+        return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ResponseData<TableBookingDTO>> updateTableBooking(
+            @PathVariable(name = "id") Integer id,
+            @Valid @RequestBody TableBookingDTO bookingDTO
+    ) throws ParseException {
+        ResponseData<TableBookingDTO> responseData = bookingService.updateTableBooking(id, bookingDTO);
+        return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseData<Void>> deleteTableBookingById(@PathVariable(name = "id") Integer id) {
+        ResponseData<Void> responseData = bookingService.deleteTableBookingById(id);
+        return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseData<TableBookingDTO>> getTableBookingById(@PathVariable(name = "id") Integer id) {
+        ResponseData<TableBookingDTO> responseData = bookingService.getTableBookingById(id);
+        return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
+    }
+}
