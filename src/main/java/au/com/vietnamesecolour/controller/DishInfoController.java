@@ -8,21 +8,12 @@ import au.com.vietnamesecolour.service.DishInfoService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("/api/v1/private/dishes")
@@ -45,7 +36,7 @@ public class DishInfoController {
 
     @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<ResponseData<DishInfoDTO>> createDishInfo(
-            @RequestPart DishInfoDTO dishInfoDTO,
+            @Valid @RequestPart DishInfoDTO dishInfoDTO,
             @RequestPart(name = "image") MultipartFile imageFile
     ) {
         ResponseData<DishInfoDTO> responseData = dishInfoService.createDishInfo(dishInfoDTO, imageFile);
