@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(uses = DishInfoMapper.class)
 public interface DishGroupMapper {
 
     DishGroupMapper INSTANCE = Mappers.getMapper( DishGroupMapper.class );
@@ -16,6 +16,7 @@ public interface DishGroupMapper {
     @Mapping(source = "updatedDate", target = "updatedDate", dateFormat = DateConstant.STR_PLAN_DD_MM_YYYY_HH_MM_SS)
     @Mapping(source = "createdBy.username", target = "createdBy")
     @Mapping(source = "updatedBy.username", target = "updatedBy")
+    @Mapping(source = "dishInfos", target = "dishList")
     DishGroupDTO entityToDTO(DishGroup entity);
 
 }

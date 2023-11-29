@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -14,6 +16,7 @@ public class DishGroupDTO {
     private Integer id;
     @NotBlank(message = "Group name must not be blank")
     private String dishGroupName;
+    private List<DishInfoDTO> dishList;
     private String createdDate;
     private String updatedDate;
     private String createdBy;
