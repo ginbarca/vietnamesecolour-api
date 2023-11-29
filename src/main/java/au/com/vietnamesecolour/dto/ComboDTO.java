@@ -12,10 +12,10 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DishGroupDTO {
+public class ComboDTO {
     private Integer id;
     @NotBlank(message = "Group name must not be blank")
-    private String dishGroupName;
+    private String comboName;
     private List<DishInfoDTO> dishList;
     private String createdDate;
     private String updatedDate;

@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -31,6 +33,9 @@ public class DishInfo extends Auditable {
     @Column(name = "dish_image_path")
     private String dishImagePath;
 
+    @Column(name = "dish_image_name")
+    private String dishImageName;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dish_group_id")
     private DishGroup dishGroup;
@@ -38,4 +43,12 @@ public class DishInfo extends Auditable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "unit_id")
     private Unit unit;
+
+    @ManyToMany
+    @JoinTable(
+            name = "dish_combo",
+            joinColumns = @JoinColumn(name = "dish_id"),
+            inverseJoinColumns = @JoinColumn(name = "combo_id")
+    )
+    private List<Combo> comboList;
 }
