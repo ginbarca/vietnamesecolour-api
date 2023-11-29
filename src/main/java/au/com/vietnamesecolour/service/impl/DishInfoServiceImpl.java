@@ -3,6 +3,7 @@ package au.com.vietnamesecolour.service.impl;
 import au.com.vietnamesecolour.config.data.ResponseData;
 import au.com.vietnamesecolour.config.data.ResponsePage;
 import au.com.vietnamesecolour.config.data.ResponseStatusCode;
+import au.com.vietnamesecolour.config.exception.CommonErrorCode;
 import au.com.vietnamesecolour.dto.DishInfoDTO;
 import au.com.vietnamesecolour.entity.DishInfo;
 import au.com.vietnamesecolour.mapper.DishInfoMapper;
@@ -10,26 +11,20 @@ import au.com.vietnamesecolour.repos.DishGroupRepository;
 import au.com.vietnamesecolour.repos.DishInfoRepository;
 import au.com.vietnamesecolour.repos.UnitRepository;
 import au.com.vietnamesecolour.service.DishInfoService;
+import au.com.vietnamesecolour.service.FileUploaderAbstract;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -54,63 +49,49 @@ public class DishInfoServiceImpl implements DishInfoService {
 
     @Override
     public ResponseData<DishInfoDTO> createDishInfo(DishInfoDTO payload, MultipartFile imageFile) {
-        ResponseData<DishInfoDTO> responseData;
-        if (uploadDir.trim().length() == 0) {
-            responseData = new ResponseData<>(ResponseStatusCode.BAD_REQUEST.getCode(), "File upload location can not be empty");
-            return responseData;
-        }
-        try {
-            if (imageFile.isEmpty()) {
-                responseData = new ResponseData<>(ResponseStatusCode.BAD_REQUEST.getCode(), "Failed to store empty file");
-                return responseData;
-            }
-            Path destinationFile = this.rootLocation
-                    .resolve(
-                            Paths.get(Objects.requireNonNull(imageFile.getOriginalFilename()))
-                    )
-                    .normalize()
-                    .toAbsolutePath();
-            if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
-                responseData = new ResponseData<>(ResponseStatusCode.BAD_REQUEST.getCode(), "Cannot store file outside current directory");
-                return responseData;
-            }
-            try (InputStream inputStream = imageFile.getInputStream()) {
-                Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
-                DishInfo dishInfo = DishInfo
-                        .builder()
-                        .dishName(payload.getDishName())
-                        .price(payload.getPrice())
-                        .dishDescription(payload.getDishDescription())
-                        .dishImagePath(this.rootLocation.resolve(imageFile.getOriginalFilename()).toString())
-                        .dishImageName(imageFile.getOriginalFilename())
-                        .dishGroup(groupRepository.findById(payload.getDishGroupId()).get())
-                        .unit(unitRepository.findById(payload.getUnitId()).get())
-                        .build();
-                DishInfo savedDish = dishInfoRepository.save(dishInfo);
-                DishInfoDTO dishInfoDTO = DishInfoMapper.INSTANCE.entityToDTO(savedDish);
-                responseData = new ResponseData<>();
-                responseData.setData(dishInfoDTO);
-            }
-        } catch (IOException e) {
-            responseData = new ResponseData<>(ResponseStatusCode.BAD_REQUEST.getCode(), "Failed to store file");
-            return responseData;
-        }
+        FileUploaderAbstract<DishInfoDTO, DishInfo> uploader = new DishInfoCreation(uploadDir, rootLocation);
+        ResponseData<DishInfoDTO> responseData = uploader.uploadHandler(payload, null, imageFile);
         return responseData;
     }
 
     @Override
-    public ResponseData<DishInfoDTO> updateDishInfo(Integer id, DishInfoDTO payload) {
-        return null;
+    public ResponseData<DishInfoDTO> updateDishInfo(Integer id, DishInfoDTO payload, MultipartFile imageFile) {
+        ResponseData<DishInfoDTO> responseData;
+        Optional<DishInfo> dishFindResult = dishInfoRepository.findById(id);
+        if (dishFindResult.isPresent()) {
+            DishInfo dishInfo = dishFindResult.get();
+            FileUploaderAbstract<DishInfoDTO, DishInfo> uploader = new DishInfoUpdate(uploadDir, rootLocation);
+            responseData = uploader.uploadHandler(payload, dishInfo, imageFile);
+            return responseData;
+        }
+        responseData = new ResponseData<>(ResponseStatusCode.NOT_FOUND.getCode(), CommonErrorCode.DATA_NOT_FOUND.getMessage());
+        return responseData;
     }
 
     @Override
     public ResponseData<Void> deleteDishInfoById(Integer id) {
-        return null;
+        boolean isDishExist = dishInfoRepository.existsById(id);
+        ResponseData<Void> responseData;
+        if (isDishExist) {
+            dishInfoRepository.deleteById(id);
+            responseData = new ResponseData<>(ResponseStatusCode.OK.getCode(), ResponseStatusCode.OK.getDescription());
+            return responseData;
+        }
+        responseData = new ResponseData<>(ResponseStatusCode.NOT_FOUND.getCode(), CommonErrorCode.DATA_NOT_FOUND.getMessage());
+        return responseData;
     }
 
     @Override
     public ResponseData<DishInfoDTO> getDishInfoById(Integer id) {
-        return null;
+        ResponseData<DishInfoDTO> responseData;
+        Optional<DishInfo> dishInfo = dishInfoRepository.findById(id);
+        if (dishInfo.isPresent()) {
+            responseData = new ResponseData<>();
+            responseData.setData(DishInfoMapper.INSTANCE.entityToDTO(dishInfo.get()));
+            return responseData;
+        }
+        responseData = new ResponseData<>(ResponseStatusCode.NOT_FOUND.getCode(), CommonErrorCode.DATA_NOT_FOUND.getMessage());
+        return responseData;
     }
 
     @Override
@@ -132,19 +113,53 @@ public class DishInfoServiceImpl implements DishInfoService {
         return responseData;
     }
 
-    @Override
-    public Resource loadAsResource(String filename) {
-        try {
-            Path file = rootLocation.resolve(filename);
-            Resource resource = new UrlResource(file.toUri());
+    private class DishInfoCreation extends FileUploaderAbstract<DishInfoDTO, DishInfo> {
 
-            if (resource.exists() || resource.isReadable()) {
-                return resource;
-            } else {
-                throw new RuntimeException("Could not read the file!");
-            }
-        } catch (MalformedURLException e) {
-            throw new RuntimeException("Error: " + e.getMessage());
+        protected DishInfoCreation(String uploadDir, Path rootLocation) {
+            super(uploadDir, rootLocation);
+        }
+
+        @Override
+        public ResponseData<DishInfoDTO> process(DishInfoDTO payload, DishInfo entity, MultipartFile file) {
+            entity = DishInfo
+                    .builder()
+                    .dishName(payload.getDishName())
+                    .price(payload.getPrice())
+                    .dishDescription(payload.getDishDescription())
+                    .dishImagePath(this.rootLocation.resolve(file.getOriginalFilename()).toString())
+                    .dishImageName(file.getOriginalFilename())
+                    .dishGroup(groupRepository.findById(payload.getDishGroupId()).get())
+                    .unit(unitRepository.findById(payload.getUnitId()).get())
+                    .build();
+            DishInfo savedDish = dishInfoRepository.save(entity);
+            DishInfoDTO dishInfoDTO = DishInfoMapper.INSTANCE.entityToDTO(savedDish);
+            ResponseData<DishInfoDTO> responseData = new ResponseData<>(ResponseStatusCode.CREATED.getCode(), ResponseStatusCode.CREATED.getDescription());
+            responseData.setData(dishInfoDTO);
+            return responseData;
+        }
+    }
+
+    private class DishInfoUpdate extends FileUploaderAbstract<DishInfoDTO, DishInfo> {
+
+        protected DishInfoUpdate(String uploadDir, Path rootLocation) {
+            super(uploadDir, rootLocation);
+        }
+
+        @Override
+        public ResponseData<DishInfoDTO> process(DishInfoDTO payload, DishInfo entity, MultipartFile file) {
+            entity.setDishName(payload.getDishName());
+            entity.setPrice(payload.getPrice());
+            entity.setDishDescription(payload.getDishDescription());
+            entity.setDishImagePath(this.rootLocation.resolve(file.getOriginalFilename()).toString());
+            entity.setDishImageName(file.getOriginalFilename());
+            entity.setDishGroup(groupRepository.findById(payload.getDishGroupId()).get());
+            entity.setUnit(unitRepository.findById(payload.getUnitId()).get());
+
+            DishInfo savedDish = dishInfoRepository.save(entity);
+            DishInfoDTO dishInfoDTO = DishInfoMapper.INSTANCE.entityToDTO(savedDish);
+            ResponseData<DishInfoDTO> responseData = new ResponseData<>();
+            responseData.setData(dishInfoDTO);
+            return responseData;
         }
     }
 }

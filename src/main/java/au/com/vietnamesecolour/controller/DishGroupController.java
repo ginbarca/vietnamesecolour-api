@@ -32,7 +32,7 @@ public class DishGroupController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseData<DishGroupDTO>> createDishGroup(@RequestBody DishGroupDTO payload) {
+    public ResponseEntity<ResponseData<DishGroupDTO>> createDishGroup(@Valid @RequestBody DishGroupDTO payload) {
         ResponseData<DishGroupDTO> responseData = dishGroupService.createDishGroup(payload);
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
@@ -40,7 +40,7 @@ public class DishGroupController {
     @PatchMapping("/{id}")
     public ResponseEntity<ResponseData<DishGroupDTO>> updateDishGroup(
             @PathVariable(name = "id") Integer id,
-            @RequestBody DishGroupDTO payload
+            @Valid @RequestBody DishGroupDTO payload
     ) {
         ResponseData<DishGroupDTO> responseData = dishGroupService.updateDishGroup(id, payload);
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));

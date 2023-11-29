@@ -43,4 +43,25 @@ public class DishInfoController {
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
+    @PatchMapping(value = ("/{id}"), consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<ResponseData<DishInfoDTO>> updateDishInfo(
+            @PathVariable(name = "id") Integer id,
+            @Valid @RequestPart DishInfoDTO dishInfoDTO,
+            @RequestPart(name = "image") MultipartFile imageFile
+    ) {
+        ResponseData<DishInfoDTO> responseData = dishInfoService.updateDishInfo(id, dishInfoDTO, imageFile);
+        return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseData<Void>> deleteDishInfoById(@PathVariable(name = "id") Integer id) {
+        ResponseData<Void> responseData = dishInfoService.deleteDishInfoById(id);
+        return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseData<DishInfoDTO>> getDishInfoById(@PathVariable(name = "id") Integer id) {
+        ResponseData<DishInfoDTO> responseData = dishInfoService.getDishInfoById(id);
+        return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
+    }
 }
