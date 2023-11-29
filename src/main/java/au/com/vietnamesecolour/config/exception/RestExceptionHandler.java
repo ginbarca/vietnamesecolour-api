@@ -128,7 +128,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatusCode status,
             WebRequest request) {
         LOGGER.error(ex.getMessage());
-        return this.handleError(CommonErrorCode.ARGUMENT_NOT_VALID, null, this.getSubErrors(ex));
+//        return this.handleError(CommonErrorCode.ARGUMENT_NOT_VALID, null, this.getSubErrors(ex));
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now()
+                .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        body.put("code", HttpStatus.BAD_REQUEST.value());
+        List<SubError> subErrors = this.getSubErrors(ex);
+        Object[] messages = subErrors.stream().map(SubError::getMessage).toArray();
+        body.put("message", messages);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
     /**
