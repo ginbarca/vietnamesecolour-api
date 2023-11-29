@@ -1,5 +1,6 @@
 package au.com.vietnamesecolour.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,11 +16,12 @@ public class DishInfoDTO {
     private Float price;
     private String dishDescription;
     private String dishImagePath;
+    private String dishImageName;
     private String dishGroupName;
-//    @JsonIgnore
+    @NotNull(message = "Group ID must not be null")
     private Integer dishGroupId;
     private String unitName;
-//    @JsonIgnore
+    @NotNull(message = "Unit ID must not be null")
     private Integer unitId;
     private String createdDate;
     private String updatedDate;
