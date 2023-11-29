@@ -4,13 +4,11 @@ import au.com.vietnamesecolour.config.data.ResponseData;
 import au.com.vietnamesecolour.config.data.ResponsePage;
 import au.com.vietnamesecolour.config.data.ResponseStatusCode;
 import au.com.vietnamesecolour.config.exception.CommonErrorCode;
-import au.com.vietnamesecolour.constant.DateConstant;
 import au.com.vietnamesecolour.dto.ComboDTO;
 import au.com.vietnamesecolour.entity.Combo;
 import au.com.vietnamesecolour.mapper.ComboMapper;
 import au.com.vietnamesecolour.repos.ComboRepository;
 import au.com.vietnamesecolour.service.ComboService;
-import au.com.vietnamesecolour.utils.DateTimeUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -72,18 +70,8 @@ public class ComboServiceImpl implements ComboService {
         ResponseData<ComboDTO> responseData;
         Optional<Combo> combo = comboRepo.findById(id);
         if (combo.isPresent()) {
-            Combo u = combo.get();
             responseData = new ResponseData<>();
-            responseData.setData(
-                    ComboDTO.builder()
-                            .id(u.getId())
-                            .comboName(u.getComboName())
-                            .createdBy(u.getCreatedBy().getUsername())
-                            .updatedBy(u.getUpdatedBy().getUsername())
-                            .createdDate(DateTimeUtils.formatDate(u.getCreatedDate(), DateConstant.STR_PLAN_DD_MM_YYYY_HH_MM_SS))
-                            .updatedDate(DateTimeUtils.formatDate(u.getUpdatedDate(), DateConstant.STR_PLAN_DD_MM_YYYY_HH_MM_SS))
-                            .build()
-            );
+            responseData.setData(ComboMapper.INSTANCE.entityToDTO(combo.get()));
         } else {
             responseData = new ResponseData<>(ResponseStatusCode.NOT_FOUND.getCode(), CommonErrorCode.DATA_NOT_FOUND.getMessage());
         }
