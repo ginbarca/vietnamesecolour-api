@@ -24,6 +24,11 @@ public class Combo extends Auditable {
     @Column(name = "combo_name")
     private String comboName;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "comboList")
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "dish_combo",
+            joinColumns = @JoinColumn(name = "combo_id"),
+            inverseJoinColumns = @JoinColumn(name = "dish_id")
+    )
     private List<DishInfo> dishInfos;
 }
