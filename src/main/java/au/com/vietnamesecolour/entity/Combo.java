@@ -24,6 +24,9 @@ public class Combo extends Auditable {
     @Column(name = "combo_name")
     private String comboName;
 
+    @Column(name = "combo_price")
+    private Float comboPrice;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "dish_combo",
