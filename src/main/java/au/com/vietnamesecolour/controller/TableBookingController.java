@@ -7,6 +7,7 @@ import au.com.vietnamesecolour.dto.TableBookingDTO;
 import au.com.vietnamesecolour.service.TableBookingService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ import java.text.ParseException;
 @RequiredArgsConstructor
 @Validated
 public class TableBookingController {
-    
+
     private final TableBookingService bookingService;
 
     @GetMapping
@@ -28,11 +29,11 @@ public class TableBookingController {
             @RequestParam(name = "customerName", required = false) String customerName,
             @RequestParam(name = "mobileNumber", required = false) String mobileNumber,
             @RequestParam(name = "email", required = false) String email,
-            @RequestParam(name = "bookingDateFrom", required = false) String bookingDateFrom,
-            @RequestParam(name = "bookingDateTo", required = false) String bookingDateTo,
+            @Valid @Pattern(regexp = "^(3[01]|[12][0-9]|0[1-9])-(1[0-2]|0[1-9])-[0-9]{4}$", message = "Invalid date") @RequestParam(name = "bookingDateFrom", required = false) String bookingDateFrom,
+            @Valid @Pattern(regexp = "^(3[01]|[12][0-9]|0[1-9])-(1[0-2]|0[1-9])-[0-9]{4}$", message = "Invalid date") @RequestParam(name = "bookingDateTo", required = false) String bookingDateTo,
             @Valid @Min(value = 1, message = "Page must be start from 1") @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
             @Valid @Min(value = 1, message = "Page size must be start from 1") @RequestParam(name = "pageSize", required = false, defaultValue = "10") Integer pageSize
-    ) {
+    ) throws ParseException {
         ResponseData<ResponsePage<TableBookingDTO>> responseData = bookingService.findTableBooking(customerName, mobileNumber, email, bookingDateFrom, bookingDateTo, page, pageSize);
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }

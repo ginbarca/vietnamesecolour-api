@@ -24,6 +24,6 @@ public interface TableBookingService {
             String bookingDateTo,
             Integer page,
             Integer pageSize
-    );
+    ) throws ParseException;
 
 }

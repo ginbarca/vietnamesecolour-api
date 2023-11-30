@@ -21,13 +21,14 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class TableBookingServiceImpl implements TableBookingService {
-    
+
     private final TableBookingRepository bookingRepository;
     private final TableBookingStatusRepository bookingStatusRepository;
 
@@ -39,7 +40,7 @@ public class TableBookingServiceImpl implements TableBookingService {
                 .mobileNumber(payload.getMobileNumber())
                 .email(payload.getEmail())
                 .numberOfPeople(payload.getNumberOfPeople())
-                .bookingDate(DateUtils.parseDate(payload.getBookingDate(), DateConstant.ISO_8601_EXTENDED_DATE_FORMAT))
+                .bookingDate(DateUtils.parseDate(payload.getBookingDate(), DateConstant.STR_PLAN_DD_MM_YYYY))
                 .bookingTime(payload.getBookingTime())
                 .note(payload.getNote())
                 .bookingStatus(bookingStatusRepository.findById(payload.getBookingStatusId()).get())
@@ -61,7 +62,7 @@ public class TableBookingServiceImpl implements TableBookingService {
             tableBooking.setMobileNumber(payload.getMobileNumber());
             tableBooking.setEmail(payload.getEmail());
             tableBooking.setNumberOfPeople(payload.getNumberOfPeople());
-            tableBooking.setBookingDate(DateUtils.parseDate(payload.getBookingDate(), DateConstant.ISO_8601_EXTENDED_DATE_FORMAT));
+            tableBooking.setBookingDate(DateUtils.parseDate(payload.getBookingDate(), DateConstant.STR_PLAN_DD_MM_YYYY));
             tableBooking.setBookingTime(payload.getBookingTime());
             tableBooking.setNote(payload.getNote());
             tableBooking.setBookingStatus(bookingStatusRepository.findById(payload.getBookingStatusId()).get());
@@ -96,16 +97,24 @@ public class TableBookingServiceImpl implements TableBookingService {
         if (bookingSearch.isPresent()) {
             responseData = new ResponseData<>();
             responseData.setData(TableBookingMapper.INSTANCE.entityToDTO(bookingSearch.get()));
+            return responseData;
         }
         responseData = new ResponseData<>(ResponseStatusCode.NOT_FOUND.getCode(), CommonErrorCode.DATA_NOT_FOUND.getMessage());
         return responseData;
     }
 
     @Override
-    public ResponseData<ResponsePage<TableBookingDTO>> findTableBooking(String customerName, String mobileNumber, String email, String bookingDateFrom, String bookingDateTo, Integer page, Integer pageSize) {
+    public ResponseData<ResponsePage<TableBookingDTO>> findTableBooking(String customerName, String mobileNumber, String email, String bookingDateFrom, String bookingDateTo, Integer page, Integer pageSize) throws ParseException {
         ResponseData<ResponsePage<TableBookingDTO>> responseData = new ResponseData<>();
         Pageable pageable = PageRequest.of(page - 1, pageSize);
-        Page<TableBooking> bookingPage = bookingRepository.findTableBooking(customerName, mobileNumber, email, bookingDateFrom, bookingDateTo, pageable);
+        Page<TableBooking> bookingPage = bookingRepository.findTableBooking(
+                customerName,
+                mobileNumber,
+                email,
+                Objects.isNull(bookingDateFrom) ? null : DateUtils.parseDate(bookingDateFrom, DateConstant.STR_PLAN_DD_MM_YYYY),
+                Objects.isNull(bookingDateTo) ? null : DateUtils.parseDate(bookingDateTo, DateConstant.STR_PLAN_DD_MM_YYYY),
+                pageable
+        );
 
         List<TableBookingDTO> bookingDTOS = bookingPage.getContent().stream().map(TableBookingMapper.INSTANCE::entityToDTO).toList();
 
