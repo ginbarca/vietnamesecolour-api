@@ -14,7 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/private/table-booking-status")
+@RequestMapping("/api/v1/private/setting/table-booking-status")
 @RequiredArgsConstructor
 @Validated
 public class TableBookingStatusController {
