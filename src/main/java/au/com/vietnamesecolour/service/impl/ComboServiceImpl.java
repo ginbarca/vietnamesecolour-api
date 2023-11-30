@@ -33,7 +33,10 @@ public class ComboServiceImpl implements ComboService {
     @Override
     public ResponseData<ComboDTO> createCombo(ComboDTO payload) {
         ResponseData<ComboDTO> responseData;
-        Combo combo = Combo.builder().comboName(payload.getComboName()).build();
+        Combo combo = Combo.builder()
+                .comboName(payload.getComboName())
+                .comboPrice(payload.getComboPrice())
+                .build();
         List<DishInfo> dishInfos = new ArrayList<>();
         for (Integer id : payload.getDishIds()) {
             Optional<DishInfo> dishInfo = dishInfoRepository.findById(id);
@@ -57,6 +60,7 @@ public class ComboServiceImpl implements ComboService {
         ResponseData<ComboDTO> responseData;
         if (combo.isPresent()) {
             combo.get().setComboName(payload.getComboName());
+            combo.get().setComboPrice(payload.getComboPrice());
             List<DishInfo> dishInfos = new ArrayList<>();
             for (Integer dishId : payload.getDishIds()) {
                 Optional<DishInfo> dishInfo = dishInfoRepository.findById(dishId);

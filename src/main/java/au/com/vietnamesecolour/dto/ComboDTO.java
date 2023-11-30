@@ -16,6 +16,7 @@ public class ComboDTO {
     private Integer id;
     @NotBlank(message = "Group name must not be blank")
     private String comboName;
+    private Float comboPrice;
     private List<DishInfoDTO> dishList;
     private Integer[] dishIds;
     private String createdDate;
