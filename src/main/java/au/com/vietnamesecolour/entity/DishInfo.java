@@ -44,11 +44,6 @@ public class DishInfo extends Auditable {
     @JoinColumn(name = "unit_id")
     private Unit unit;
 
-    @ManyToMany
-    @JoinTable(
-            name = "dish_combo",
-            joinColumns = @JoinColumn(name = "dish_id"),
-            inverseJoinColumns = @JoinColumn(name = "combo_id")
-    )
+    @ManyToMany(mappedBy = "dishInfos")
     private List<Combo> comboList;
 }

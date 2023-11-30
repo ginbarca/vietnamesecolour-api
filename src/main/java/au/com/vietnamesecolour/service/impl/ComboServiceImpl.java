@@ -6,8 +6,10 @@ import au.com.vietnamesecolour.config.data.ResponseStatusCode;
 import au.com.vietnamesecolour.config.exception.CommonErrorCode;
 import au.com.vietnamesecolour.dto.ComboDTO;
 import au.com.vietnamesecolour.entity.Combo;
+import au.com.vietnamesecolour.entity.DishInfo;
 import au.com.vietnamesecolour.mapper.ComboMapper;
 import au.com.vietnamesecolour.repos.ComboRepository;
+import au.com.vietnamesecolour.repos.DishInfoRepository;
 import au.com.vietnamesecolour.service.ComboService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,13 +28,25 @@ import java.util.Optional;
 public class ComboServiceImpl implements ComboService {
 
     private final ComboRepository comboRepo;
+    private final DishInfoRepository dishInfoRepository;
 
     @Override
     public ResponseData<ComboDTO> createCombo(ComboDTO payload) {
+        ResponseData<ComboDTO> responseData;
         Combo combo = Combo.builder().comboName(payload.getComboName()).build();
+        List<DishInfo> dishInfos = new ArrayList<>();
+        for (Integer id : payload.getDishIds()) {
+            Optional<DishInfo> dishInfo = dishInfoRepository.findById(id);
+            if (dishInfo.isEmpty()) {
+                responseData = new ResponseData<>(ResponseStatusCode.BAD_REQUEST.getCode(), "There is no dish with ID " + id);
+                return responseData;
+            }
+            dishInfos.add(dishInfo.get());
+        }
+        combo.setDishInfos(dishInfos);
         Combo savedCombo = comboRepo.save(combo);
         ComboDTO dto = ComboMapper.INSTANCE.entityToDTO(savedCombo);
-        ResponseData<ComboDTO> responseData = new ResponseData<>(ResponseStatusCode.CREATED.getCode(), ResponseStatusCode.CREATED.getDescription());
+        responseData = new ResponseData<>(ResponseStatusCode.CREATED.getCode(), ResponseStatusCode.CREATED.getDescription());
         responseData.setData(dto);
         return responseData;
     }
@@ -42,6 +57,16 @@ public class ComboServiceImpl implements ComboService {
         ResponseData<ComboDTO> responseData;
         if (combo.isPresent()) {
             combo.get().setComboName(payload.getComboName());
+            List<DishInfo> dishInfos = new ArrayList<>();
+            for (Integer dishId : payload.getDishIds()) {
+                Optional<DishInfo> dishInfo = dishInfoRepository.findById(dishId);
+                if (dishInfo.isEmpty()) {
+                    responseData = new ResponseData<>(ResponseStatusCode.BAD_REQUEST.getCode(), "There is no dish with ID " + id);
+                    return responseData;
+                }
+                dishInfos.add(dishInfo.get());
+            }
+            combo.get().setDishInfos(dishInfos);
             Combo savedCombo = comboRepo.save(combo.get());
             ComboDTO dto = ComboMapper.INSTANCE.entityToDTO(savedCombo);
             responseData = new ResponseData<>();
