@@ -1,6 +1,7 @@
 package au.com.vietnamesecolour.controller;
 
 import au.com.vietnamesecolour.config.data.ResponseData;
+import au.com.vietnamesecolour.config.data.ResponseStatusCode;
 import au.com.vietnamesecolour.config.data.ResponseUtils;
 import au.com.vietnamesecolour.config.exception.CommonErrorCode;
 import au.com.vietnamesecolour.dto.AuthenticationRequestDTO;
@@ -13,9 +14,11 @@ import au.com.vietnamesecolour.utils.CommonUtils;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -24,6 +27,7 @@ import java.io.UnsupportedEncodingException;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
+@Validated
 public class AuthenticationController {
 
     private final AuthenticationService service;
@@ -54,14 +58,20 @@ public class AuthenticationController {
         if (isUserExist) {
             responseData = userService.sendResetPwdLink(CommonUtils.getApplicationUrl(servletRequest), pwdReqDTO.getEmail());
         } else {
-            responseData = new ResponseData<>(CommonErrorCode.ENTITY_NOT_FOUND.getCode(), CommonErrorCode.ENTITY_NOT_FOUND.getMessage());
+            responseData = new ResponseData<>(ResponseStatusCode.NOT_FOUND.getCode(), CommonErrorCode.ENTITY_NOT_FOUND.getMessage());
         }
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
-//    @PostMapping("/reset-password")
-//    public ResponseEntity<ResponseData<Void>> resetPassword(@RequestBody ResetPasswordRequestDTO pwdReqDTO, @RequestParam("token") String token) {
-//        ResponseData<Void> responseData;
-//        return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
-//    }
+    @PostMapping("/reset-password")
+    public ResponseEntity<ResponseData<Void>> resetPassword(@RequestBody ResetPasswordRequestDTO pwdReqDTO, @Valid @RequestParam("token") String token) {
+        Boolean isUserExist = userService.existsByEmail(pwdReqDTO.getEmail());
+        ResponseData<Void> responseData;
+        if (isUserExist) {
+            responseData = userService.resetPassword(pwdReqDTO, token);
+        } else {
+            responseData = new ResponseData<>(ResponseStatusCode.NOT_FOUND.getCode(), CommonErrorCode.ENTITY_NOT_FOUND.getMessage());
+        }
+        return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
+    }
 }

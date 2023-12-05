@@ -33,12 +33,11 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
     public String validatePasswordResetToken(String passwordResetToken) {
         PasswordResetToken passwordToken = pwdResetTokenRepo.findByToken(passwordResetToken);
         if (passwordToken == null) {
-            return "Invalid verification token";
+            return "invalid";
         }
-        User user = passwordToken.getUser();
         Calendar calendar = Calendar.getInstance();
         if ((passwordToken.getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0) {
-            return "Link already expired, resend link";
+            return "expired";
         }
         return "valid";
     }

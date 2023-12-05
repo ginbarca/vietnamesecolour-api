@@ -54,7 +54,15 @@ public enum CommonErrorCode implements AbstractError {
     EXECUTE_THIRTY_SERVICE_ERROR(
             18, "An error occurred while executing the 3rd party api!", HttpStatus.INTERNAL_SERVER_ERROR),
     DATA_NOT_FOUND(19, "Data not found", HttpStatus.NOT_FOUND),
-    GENERATE_PWD_RESET_TOKEN_ERROR(20, "An error occurred while generating password reset token", HttpStatus.INTERNAL_SERVER_ERROR);
+    GENERATE_PWD_RESET_TOKEN_ERROR(20, "An error occurred while generating password reset token", HttpStatus.INTERNAL_SERVER_ERROR),
+    RESET_PWD_TOKEN_INVALID(
+            21,
+            "Reset password token invalid.",
+            HttpStatus.UNAUTHORIZED),
+    RESET_PWD_TOKEN_EXPIRED(
+            22,
+            "Reset password token expired.",
+            HttpStatus.UNAUTHORIZED);
 
     private final int code;
 
