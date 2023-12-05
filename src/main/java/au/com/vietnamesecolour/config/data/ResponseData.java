@@ -1,6 +1,7 @@
 package au.com.vietnamesecolour.config.data;
 
 import au.com.vietnamesecolour.constant.DateConstant;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Getter;
 
 import java.io.Serializable;
@@ -11,13 +12,13 @@ import java.time.format.DateTimeFormatter;
 public class ResponseData<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    @JsonView({ViewMode.Public.class})
     private final String timestamp;
-
+    @JsonView({ViewMode.Public.class})
     private int code;
-
+    @JsonView({ViewMode.Public.class})
     private String message;
-
+    @JsonView({ViewMode.Public.class})
     private T data;
 
     public ResponseData() {

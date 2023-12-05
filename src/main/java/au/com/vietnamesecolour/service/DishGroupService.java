@@ -4,6 +4,8 @@ import au.com.vietnamesecolour.config.data.ResponseData;
 import au.com.vietnamesecolour.config.data.ResponsePage;
 import au.com.vietnamesecolour.dto.DishGroupDTO;
 
+import java.util.List;
+
 public interface DishGroupService {
 
     ResponseData<DishGroupDTO> createDishGroup(DishGroupDTO payload);
@@ -11,4 +13,6 @@ public interface DishGroupService {
     ResponseData<Void> deleteDishGroupById(Integer id);
     ResponseData<DishGroupDTO> getDishGroupById(Integer id);
     ResponseData<ResponsePage<DishGroupDTO>> findDishGroup(String dishName, Integer page, Integer pageSize);
+
+    ResponseData<List<DishGroupDTO>> listAllDishGroups();
 }

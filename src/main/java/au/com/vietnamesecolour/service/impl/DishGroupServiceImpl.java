@@ -122,4 +122,12 @@ public class DishGroupServiceImpl implements DishGroupService {
         responseData.setData(responsePage);
         return responseData;
     }
+
+    @Override
+    public ResponseData<List<DishGroupDTO>> listAllDishGroups() {
+        ResponseData<List<DishGroupDTO>> responseData = new ResponseData<>();
+        List<DishGroupDTO> dtos = dishGroupRepo.findAll().stream().map(DishGroupMapper.INSTANCE::entityToDTO).toList();
+        responseData.setData(dtos);
+        return responseData;
+    }
 }
