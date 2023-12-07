@@ -3,8 +3,10 @@ package au.com.vietnamesecolour.controller;
 import au.com.vietnamesecolour.config.data.ResponseData;
 import au.com.vietnamesecolour.config.data.ResponsePage;
 import au.com.vietnamesecolour.config.data.ResponseUtils;
+import au.com.vietnamesecolour.config.data.ViewMode;
 import au.com.vietnamesecolour.dto.TableBookingDTO;
 import au.com.vietnamesecolour.service.TableBookingService;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
@@ -17,14 +19,14 @@ import org.springframework.web.bind.annotation.*;
 import java.text.ParseException;
 
 @RestController
-@RequestMapping("/api/v1/private/table-bookings")
 @RequiredArgsConstructor
 @Validated
 public class TableBookingController {
 
     private final TableBookingService bookingService;
 
-    @GetMapping
+    @JsonView({ViewMode.Private.class})
+    @GetMapping("/api/v1/private/table-bookings")
     public ResponseEntity<ResponseData<ResponsePage<TableBookingDTO>>> findTableBooking(
             @RequestParam(name = "customerName", required = false) String customerName,
             @RequestParam(name = "mobileNumber", required = false) String mobileNumber,
@@ -38,7 +40,15 @@ public class TableBookingController {
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
-    @PostMapping
+    @PostMapping("/api/v1/public/table-bookings")
+    public ResponseEntity<ResponseData<TableBookingDTO>> bookTable(
+            @Valid @RequestBody TableBookingDTO bookingDTO
+    ) throws ParseException {
+        ResponseData<TableBookingDTO> responseData = bookingService.createTableBooking(bookingDTO);
+        return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
+    }
+
+    @PostMapping("/api/v1/private/table-bookings")
     public ResponseEntity<ResponseData<TableBookingDTO>> createTableBooking(
             @Valid @RequestBody TableBookingDTO bookingDTO
     ) throws ParseException {
@@ -46,7 +56,7 @@ public class TableBookingController {
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/api/v1/private/table-bookings/{id}")
     public ResponseEntity<ResponseData<TableBookingDTO>> updateTableBooking(
             @PathVariable(name = "id") Integer id,
             @Valid @RequestBody TableBookingDTO bookingDTO
@@ -55,13 +65,13 @@ public class TableBookingController {
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/api/v1/private/table-bookings/{id}")
     public ResponseEntity<ResponseData<Void>> deleteTableBookingById(@PathVariable(name = "id") Integer id) {
         ResponseData<Void> responseData = bookingService.deleteTableBookingById(id);
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/api/v1/private/table-bookings/{id}")
     public ResponseEntity<ResponseData<TableBookingDTO>> getTableBookingById(@PathVariable(name = "id") Integer id) {
         ResponseData<TableBookingDTO> responseData = bookingService.getTableBookingById(id);
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
