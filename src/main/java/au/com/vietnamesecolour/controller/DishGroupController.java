@@ -25,7 +25,7 @@ public class DishGroupController {
     private final DishGroupService dishGroupService;
 
     @JsonView({ViewMode.Public.class})
-    @GetMapping("/api/v1/public/dish-groups")
+    @GetMapping("/api/v1/public/menu")
     public ResponseEntity<ResponseData<List<DishGroupDTO>>> listAllDishGroups() {
         ResponseData<List<DishGroupDTO>> responseData = dishGroupService.listAllDishGroups();
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
