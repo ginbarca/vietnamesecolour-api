@@ -1,5 +1,8 @@
 package au.com.vietnamesecolour.utils;
 
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
@@ -38,5 +41,13 @@ public class CommonUtils {
 
     public static int randomInt() {
         return rnd.nextInt(((99999 - 10000) + 1) + 10000);
+    }
+
+    public static String getApplicationUrl(HttpServletRequest request) {
+        String baseUrl = ServletUriComponentsBuilder.fromRequestUri(request)
+                .replacePath(null)
+                .build()
+                .toUriString();
+        return baseUrl + request.getContextPath();
     }
 }
