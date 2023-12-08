@@ -37,7 +37,7 @@ application:
       expiration: 86400000 # a day
       refresh-token:
         expiration: 604800000 # 7 days
-  upload-dir: uploads/ # F:\\Work\\
+  upload-dir: ${UPLOAD_DIR} #uploads/ # F:\\Work\\
 springdoc:
   pathsToMatch: /api/**
 #logging:
