@@ -4,13 +4,19 @@ This app was created with Bootify.io - tips on working with the code [can be fou
 
 ## Development
 
-During development it is recommended to use the profile `local`. In IntelliJ, `-Dspring.profiles.active=local` can be added in the VM options of the Run Configuration after enabling this property in "Modify options".
+During development it is recommended to use the profile `dev`. In IntelliJ, `-Dspring.profiles.active=dev` can be added in the VM options of the Run Configuration after enabling this property in "Modify options".
 
-Update your local database connection in `application.yml` or create your own `application-local.yml` file to override settings for development.
+Update your local database connection in `application.yml` or create your own `application-dev.yml` file to override settings for development.
 
 Lombok must be supported by your IDE. For this, in IntelliJ install the Lombok plugin and enable annotation processing - [learn more](https://bootify.io/next-steps/spring-boot-with-lombok.html).
 
 After starting the application it is accessible under `localhost:8080`.
+
+## Environment variables
+- `JDBC_DATABASE_PASSWORD=`
+- `JDBC_DATABASE_URL=jdbc:mysql://localhost:3306/xxx`
+- `JDBC_DATABASE_USERNAME=testroot`
+- `UPLOAD_DIR=uploads/` or you can specify absolute path
 
 ## Build
 
