@@ -10,7 +10,8 @@ import au.com.vietnamesecolour.entity.DishInfo;
 import au.com.vietnamesecolour.entity.OrderDetail;
 import au.com.vietnamesecolour.mapper.OrderDetailMapper;
 import au.com.vietnamesecolour.repos.*;
-import au.com.vietnamesecolour.service.OrderDetailService;
+import au.com.vietnamesecolour.service.OrderService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.data.domain.Page;
@@ -25,8 +26,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
-public class OrderDetailServiceImpl implements OrderDetailService {
+public class OrderServiceImpl implements OrderService {
 
     private final OrderDetailRepository orderRepo;
     private final UserRepository userRepo;

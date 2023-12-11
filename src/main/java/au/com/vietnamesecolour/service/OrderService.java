@@ -6,7 +6,7 @@ import au.com.vietnamesecolour.dto.OrderDetailDTO;
 
 import java.text.ParseException;
 
-public interface OrderDetailService {
+public interface OrderService {
 
     ResponseData<OrderDetailDTO> createOrder(OrderDetailDTO payload) throws ParseException;
     ResponseData<OrderDetailDTO> updateOrder(Integer id, OrderDetailDTO payload) throws ParseException;
