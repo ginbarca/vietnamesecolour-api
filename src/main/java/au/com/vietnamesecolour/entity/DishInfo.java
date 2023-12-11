@@ -46,4 +46,7 @@ public class DishInfo extends Auditable {
 
     @ManyToMany(mappedBy = "dishInfos")
     private List<Combo> comboList;
+
+    @ManyToMany(mappedBy = "dishInfos")
+    private List<OrderDetail> orderDetails;
 }
