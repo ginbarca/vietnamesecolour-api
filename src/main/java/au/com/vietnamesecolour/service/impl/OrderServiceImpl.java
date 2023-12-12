@@ -51,7 +51,7 @@ public class OrderServiceImpl implements OrderService {
                 return responseData;
             }
             DishInfo dishInfo = optDishInfo.get();
-            totalPrice += dishInfo.getPrice();
+            totalPrice += dishInfo.getPrice() * ordDish.getQuantity();
             orderDishes.add(
                     OrderDish
                             .builder()
@@ -80,7 +80,7 @@ public class OrderServiceImpl implements OrderService {
         OrderDetail savedOrderDetail = orderRepo.save(orderDetail);
         orderDishes.forEach(item -> item.setOrderDetail(savedOrderDetail));
         orderDishRepository.saveAll(orderDishes);
-
+        savedOrderDetail.setOrderDishes(orderDishes);
         OrderDetailDTO dto = OrderDetailMapper.INSTANCE.entityToDTO(savedOrderDetail);
         responseData = new ResponseData<>(ResponseStatusCode.CREATED.getCode(), ResponseStatusCode.CREATED.getDescription());
         responseData.setData(dto);

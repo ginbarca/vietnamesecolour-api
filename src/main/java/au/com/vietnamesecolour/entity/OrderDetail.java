@@ -69,6 +69,6 @@ public class OrderDetail extends Auditable {
 //    )
 //    private List<DishInfo> dishInfos;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "orderDetail")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "orderDetail")
     private List<OrderDish> orderDishes;
 }

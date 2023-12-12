@@ -11,6 +11,8 @@ public interface OrderDishMapper {
 
     OrderDishMapper INSTANCE = Mappers.getMapper( OrderDishMapper.class );
 
+    @Mapping(source = "orderDetail.id", target = "orderId")
+    @Mapping(source = "dishInfo.id", target = "dishId")
     @Mapping(source = "dishInfo.dishName", target = "dishName")
     @Mapping(source = "dishInfo.price", target = "price")
     @Mapping(source = "dishInfo.dishImageName", target = "dishImageName")

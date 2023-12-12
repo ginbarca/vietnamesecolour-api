@@ -25,7 +25,6 @@ public class OrderController {
 
     private final OrderService comboService;
 
-    @JsonView({ViewMode.Public.class})
     @GetMapping("/private/orders")
     public ResponseEntity<ResponseData<ResponsePage<OrderDetailDTO>>> findOrder(
             @RequestParam(name = "custName", required = false, defaultValue = "") String custName,
@@ -38,6 +37,7 @@ public class OrderController {
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
+    @JsonView({ViewMode.Public.class})
     @PostMapping("/private/orders")
     public ResponseEntity<ResponseData<OrderDetailDTO>> createOrder(@Valid @RequestBody OrderDetailDTO payload) throws ParseException {
         ResponseData<OrderDetailDTO> responseData = comboService.createOrder(payload);

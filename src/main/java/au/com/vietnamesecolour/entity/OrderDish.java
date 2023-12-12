@@ -23,7 +23,7 @@ public class OrderDish extends Auditable {
     @JoinColumn(name = "order_id")
     private OrderDetail orderDetail;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "dish_id")
     private DishInfo dishInfo;
 

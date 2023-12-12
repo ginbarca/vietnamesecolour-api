@@ -71,7 +71,7 @@ public class OrderDetailDTO {
     @JsonView({ViewMode.Private.class, ViewMode.Public.class})
     private String orderTypeName;
 
-    @JsonView({ViewMode.Private.class})
+    @JsonView({ViewMode.Private.class, ViewMode.Public.class})
     @NotNull(message = "Order must have at least one item")
     private List<OrderDishDTO> orderDishes;
 
