@@ -47,6 +47,9 @@ public class DishInfo extends Auditable {
     @ManyToMany(mappedBy = "dishInfos")
     private List<Combo> comboList;
 
-    @ManyToMany(mappedBy = "dishInfos")
-    private List<OrderDetail> orderDetails;
+//    @ManyToMany(mappedBy = "dishInfos")
+//    private List<OrderDetail> orderDetails;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "dishInfo")
+    private List<OrderDish> orderDishes;
 }

@@ -6,8 +6,10 @@ import au.com.vietnamesecolour.config.data.ResponseStatusCode;
 import au.com.vietnamesecolour.config.exception.CommonErrorCode;
 import au.com.vietnamesecolour.constant.DateConstant;
 import au.com.vietnamesecolour.dto.OrderDetailDTO;
+import au.com.vietnamesecolour.dto.OrderDishDTO;
 import au.com.vietnamesecolour.entity.DishInfo;
 import au.com.vietnamesecolour.entity.OrderDetail;
+import au.com.vietnamesecolour.entity.OrderDish;
 import au.com.vietnamesecolour.mapper.OrderDetailMapper;
 import au.com.vietnamesecolour.repos.*;
 import au.com.vietnamesecolour.service.OrderService;
@@ -35,10 +37,31 @@ public class OrderServiceImpl implements OrderService {
     private final OrderStatusRepository orderStatusRepository;
     private final OrderTypeRepository orderTypeRepository;
     private final DishInfoRepository dishInfoRepository;
+    private final OrderDishRepository orderDishRepository;
 
     @Override
     public ResponseData<OrderDetailDTO> createOrder(OrderDetailDTO payload) throws ParseException {
         ResponseData<OrderDetailDTO> responseData;
+        Float totalPrice = 0f;
+        List<OrderDish> orderDishes = new ArrayList<>();
+        for (OrderDishDTO ordDish : payload.getOrderDishes()) {
+            Optional<DishInfo> optDishInfo = dishInfoRepository.findById(ordDish.getDishId());
+            if (optDishInfo.isEmpty()) {
+                responseData = new ResponseData<>(ResponseStatusCode.BAD_REQUEST.getCode(), "There is no dish with ID " + ordDish.getDishId());
+                return responseData;
+            }
+            DishInfo dishInfo = optDishInfo.get();
+            totalPrice += dishInfo.getPrice();
+            orderDishes.add(
+                    OrderDish
+                            .builder()
+                            .dishInfo(dishInfo)
+                            .quantity(ordDish.getQuantity())
+                            .price(dishInfo.getPrice())
+                            .note(ordDish.getNote())
+                            .build()
+            );
+        }
         OrderDetail orderDetail = OrderDetail
                 .builder()
                 .customerInfo(Objects.nonNull(payload.getCustId()) ? userRepo.findById(payload.getCustId()).get() : null)
@@ -48,23 +71,16 @@ public class OrderServiceImpl implements OrderService {
                 .custAddress(payload.getCustAddress())
                 .note(payload.getNote())
                 .discount(payload.getDiscount())
-                .totalAmount(payload.getTotalAmount())
+                .totalAmount(totalPrice)
                 .orderDate(DateUtils.parseDate(payload.getOrderDate(), DateConstant.STR_PLAN_DD_MM_YYYY))
                 .orderTime(payload.getOrderTime())
                 .orderStatus(orderStatusRepository.findById(payload.getOrderStatusId()).get())
                 .orderType(orderTypeRepository.findById(payload.getOrderTypeId()).get())
                 .build();
-        List<DishInfo> dishInfos = new ArrayList<>();
-        for (Integer id : payload.getDishIds()) {
-            Optional<DishInfo> dishInfo = dishInfoRepository.findById(id);
-            if (dishInfo.isEmpty()) {
-                responseData = new ResponseData<>(ResponseStatusCode.BAD_REQUEST.getCode(), "There is no dish with ID " + id);
-                return responseData;
-            }
-            dishInfos.add(dishInfo.get());
-        }
-        orderDetail.setDishInfos(dishInfos);
         OrderDetail savedOrderDetail = orderRepo.save(orderDetail);
+        orderDishes.forEach(item -> item.setOrderDetail(savedOrderDetail));
+        orderDishRepository.saveAll(orderDishes);
+
         OrderDetailDTO dto = OrderDetailMapper.INSTANCE.entityToDTO(savedOrderDetail);
         responseData = new ResponseData<>(ResponseStatusCode.CREATED.getCode(), ResponseStatusCode.CREATED.getDescription());
         responseData.setData(dto);
@@ -76,6 +92,26 @@ public class OrderServiceImpl implements OrderService {
         Optional<OrderDetail> orderSearch = orderRepo.findById(id);
         ResponseData<OrderDetailDTO> responseData;
         if (orderSearch.isPresent()) {
+            Float totalPrice = 0f;
+            List<OrderDish> orderDishes = new ArrayList<>();
+            for (OrderDishDTO ordDish : payload.getOrderDishes()) {
+                Optional<DishInfo> optDishInfo = dishInfoRepository.findById(ordDish.getDishId());
+                if (optDishInfo.isEmpty()) {
+                    responseData = new ResponseData<>(ResponseStatusCode.BAD_REQUEST.getCode(), "There is no dish with ID " + ordDish.getDishId());
+                    return responseData;
+                }
+                DishInfo dishInfo = optDishInfo.get();
+                totalPrice += dishInfo.getPrice();
+                orderDishes.add(
+                        OrderDish
+                                .builder()
+                                .dishInfo(dishInfo)
+                                .quantity(ordDish.getQuantity())
+                                .price(dishInfo.getPrice())
+                                .note(ordDish.getNote())
+                                .build()
+                );
+            }
             OrderDetail ord = orderSearch.get();
             ord.setCustomerInfo(Objects.nonNull(payload.getCustId()) ? userRepo.findById(payload.getCustId()).get() : null);
             ord.setCustName(payload.getCustName());
@@ -84,24 +120,16 @@ public class OrderServiceImpl implements OrderService {
             ord.setCustAddress(payload.getCustAddress());
             ord.setNote(payload.getNote());
             ord.setDiscount(payload.getDiscount());
-            ord.setTotalAmount(payload.getTotalAmount());
+            ord.setTotalAmount(totalPrice);
             ord.setOrderDate(DateUtils.parseDate(payload.getOrderDate(), DateConstant.STR_PLAN_DD_MM_YYYY));
             ord.setOrderTime(payload.getOrderTime());
             ord.setOrderStatus(orderStatusRepository.findById(payload.getOrderStatusId()).get());
             ord.setOrderType(orderTypeRepository.findById(payload.getOrderTypeId()).get());
-            List<DishInfo> dishInfos = new ArrayList<>();
-            for (Integer dishId : payload.getDishIds()) {
-                Optional<DishInfo> dishInfo = dishInfoRepository.findById(dishId);
-                if (dishInfo.isEmpty()) {
-                    responseData = new ResponseData<>(ResponseStatusCode.BAD_REQUEST.getCode(), "There is no dish with ID " + id);
-                    return responseData;
-                }
-                dishInfos.add(dishInfo.get());
-            }
-            ord.setDishInfos(dishInfos);
 
-            OrderDetail savedBooking = orderRepo.save(ord);
-            OrderDetailDTO dto = OrderDetailMapper.INSTANCE.entityToDTO(savedBooking);
+            OrderDetail savedOrderDetail = orderRepo.save(ord);
+            orderDishes.forEach(item -> item.setOrderDetail(savedOrderDetail));
+            orderDishRepository.saveAll(orderDishes);
+            OrderDetailDTO dto = OrderDetailMapper.INSTANCE.entityToDTO(savedOrderDetail);
             responseData = new ResponseData<>();
             responseData.setData(dto);
             return responseData;

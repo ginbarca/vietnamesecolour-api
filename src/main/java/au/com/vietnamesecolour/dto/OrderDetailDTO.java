@@ -47,7 +47,6 @@ public class OrderDetailDTO {
     private Float discount;
 
     @JsonView({ViewMode.Private.class, ViewMode.Public.class})
-    @NotNull(message = "Total price must not be null")
     private Float totalAmount;
 
     @JsonView({ViewMode.Private.class, ViewMode.Public.class})
@@ -72,12 +71,9 @@ public class OrderDetailDTO {
     @JsonView({ViewMode.Private.class, ViewMode.Public.class})
     private String orderTypeName;
 
-    @JsonView({ViewMode.Private.class, ViewMode.Public.class})
-    private List<DishInfoDTO> dishList;
-
     @JsonView({ViewMode.Private.class})
     @NotNull(message = "Order must have at least one item")
-    private Integer[] dishIds;
+    private List<OrderDishDTO> orderDishes;
 
     @JsonView({ViewMode.Private.class})
     private String createdDate;

@@ -61,12 +61,14 @@ public class OrderDetail extends Auditable {
     @JoinColumn(name = "order_type_id")
     private OrderType orderType;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "order_dish",
-            joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "dish_id")
-    )
-    private List<DishInfo> dishInfos;
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    @JoinTable(
+//            name = "order_dish",
+//            joinColumns = @JoinColumn(name = "order_id"),
+//            inverseJoinColumns = @JoinColumn(name = "dish_id")
+//    )
+//    private List<DishInfo> dishInfos;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "orderDetail")
+    private List<OrderDish> orderDishes;
 }

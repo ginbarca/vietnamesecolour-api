@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(uses = DishInfoMapper.class)
+@Mapper(uses = { DishInfoMapper.class, OrderDishMapper.class })
 public interface OrderDetailMapper {
 
     OrderDetailMapper INSTANCE = Mappers.getMapper( OrderDetailMapper.class );
@@ -19,6 +19,6 @@ public interface OrderDetailMapper {
     @Mapping(source = "updatedBy.username", target = "updatedBy")
     @Mapping(source = "orderStatus.orderStatusName", target = "orderStatusName")
     @Mapping(source = "orderType.orderTypeName", target = "orderTypeName")
-    @Mapping(source = "dishInfos", target = "dishList")
+    @Mapping(source = "orderDishes", target = "orderDishes")
     OrderDetailDTO entityToDTO(OrderDetail entity);
 }
