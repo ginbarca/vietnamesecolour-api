@@ -38,20 +38,20 @@ public class OrderController {
     }
 
     @JsonView({ViewMode.Private.class})
-    @PostMapping("/private/orders")
+    @PostMapping("/private/order")
     public ResponseEntity<ResponseData<OrderDetailDTO>> createOrder(@Valid @RequestBody OrderDetailDTO payload) throws ParseException {
         ResponseData<OrderDetailDTO> responseData = comboService.createOrder(payload);
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
     @JsonView({ViewMode.Public.class})
-    @PostMapping("/public/orders")
+    @PostMapping("/public/order")
     public ResponseEntity<ResponseData<OrderDetailDTO>> makeOrder(@Valid @RequestBody OrderDetailDTO payload) throws ParseException {
         ResponseData<OrderDetailDTO> responseData = comboService.createOrder(payload);
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
-    @PatchMapping("/private/orders/{id}")
+    @PatchMapping("/private/order/{id}")
     public ResponseEntity<ResponseData<OrderDetailDTO>> updateOrder(
             @PathVariable(name = "id") Integer id,
             @Valid @RequestBody OrderDetailDTO payload
@@ -60,13 +60,13 @@ public class OrderController {
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
-    @DeleteMapping("/private/orders/{id}")
+    @DeleteMapping("/private/order/{id}")
     public ResponseEntity<ResponseData<Void>> deleteOrderById(@PathVariable(name = "id") Integer id) {
         ResponseData<Void> responseData = comboService.deleteOrderById(id);
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
-    @GetMapping("/private/orders/{id}")
+    @GetMapping("/private/order/{id}")
     public ResponseEntity<ResponseData<OrderDetailDTO>> getOrderById(@PathVariable(name = "id") Integer id) {
         ResponseData<OrderDetailDTO> responseData = comboService.getOrderById(id);
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));

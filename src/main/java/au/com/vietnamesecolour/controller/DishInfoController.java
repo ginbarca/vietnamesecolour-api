@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/api/v1/private/dishes")
+@RequestMapping("/api/v1/private")
 @RequiredArgsConstructor
 @Validated
 public class DishInfoController {
     
     private final DishInfoService dishInfoService;
 
-    @GetMapping
+    @GetMapping("/dishes")
     public ResponseEntity<ResponseData<ResponsePage<DishInfoDTO>>> findDishInfo(
             @RequestParam(name = "dishName", required = false, defaultValue = "") String dishName,
             @RequestParam(name = "dishGroupName", required = false, defaultValue = "") String dishGroupName,
@@ -34,7 +34,7 @@ public class DishInfoController {
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
-    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PostMapping(value = "/dish", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<ResponseData<DishInfoDTO>> createDishInfo(
             @Valid @RequestPart DishInfoDTO dishInfoDTO,
             @RequestPart(name = "image") MultipartFile imageFile
@@ -43,7 +43,7 @@ public class DishInfoController {
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
-    @PatchMapping(value = ("/{id}"), consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PatchMapping(value = ("/dish/{id}"), consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<ResponseData<DishInfoDTO>> updateDishInfo(
             @PathVariable(name = "id") Integer id,
             @Valid @RequestPart DishInfoDTO dishInfoDTO,
@@ -53,13 +53,13 @@ public class DishInfoController {
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/dish/{id}")
     public ResponseEntity<ResponseData<Void>> deleteDishInfoById(@PathVariable(name = "id") Integer id) {
         ResponseData<Void> responseData = dishInfoService.deleteDishInfoById(id);
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/dish/{id}")
     public ResponseEntity<ResponseData<DishInfoDTO>> getDishInfoById(@PathVariable(name = "id") Integer id) {
         ResponseData<DishInfoDTO> responseData = dishInfoService.getDishInfoById(id);
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));

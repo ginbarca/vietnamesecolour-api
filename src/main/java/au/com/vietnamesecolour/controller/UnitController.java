@@ -14,14 +14,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/private/setting/units")
+@RequestMapping("/api/v1/private/setting")
 @RequiredArgsConstructor
 @Validated
 public class UnitController {
 
     private final UnitService unitService;
 
-    @GetMapping
+    @GetMapping("/units")
     public ResponseEntity<ResponseData<ResponsePage<UnitDTO>>> findUnit(
             @RequestParam(name = "unitName", required = false, defaultValue = "") String unitName,
             @Valid @Min(value = 1, message = "Page must be start from 1") @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
@@ -31,13 +31,13 @@ public class UnitController {
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
-    @PostMapping
+    @PostMapping("/unit")
     public ResponseEntity<ResponseData<UnitDTO>> createUnit(@RequestBody UnitDTO payload) {
         ResponseData<UnitDTO> responseData = unitService.createUnit(payload);
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/unit/{id}")
     public ResponseEntity<ResponseData<UnitDTO>> updateUnit(
             @PathVariable(name = "id") Integer id,
             @RequestBody UnitDTO payload
@@ -46,13 +46,13 @@ public class UnitController {
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/unit/{id}")
     public ResponseEntity<ResponseData<Void>> deleteUnitById(@PathVariable(name = "id") Integer id) {
         ResponseData<Void> responseData = unitService.deleteUnitById(id);
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/unit/{id}")
     public ResponseEntity<ResponseData<UnitDTO>> getUnitById(@PathVariable(name = "id") Integer id) {
         ResponseData<UnitDTO> responseData = unitService.getUnitById(id);
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));

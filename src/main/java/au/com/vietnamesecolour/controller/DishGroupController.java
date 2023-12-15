@@ -42,13 +42,13 @@ public class DishGroupController {
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
-    @PostMapping("/api/v1/private/dish-groups")
+    @PostMapping("/api/v1/private/dish-group")
     public ResponseEntity<ResponseData<DishGroupDTO>> createDishGroup(@Valid @RequestBody DishGroupDTO payload) {
         ResponseData<DishGroupDTO> responseData = dishGroupService.createDishGroup(payload);
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
-    @PatchMapping("/api/v1/private/dish-groups/{id}")
+    @PatchMapping("/api/v1/private/dish-group/{id}")
     public ResponseEntity<ResponseData<DishGroupDTO>> updateDishGroup(
             @PathVariable(name = "id") Integer id,
             @Valid @RequestBody DishGroupDTO payload
@@ -57,13 +57,13 @@ public class DishGroupController {
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
-    @DeleteMapping("/api/v1/private/dish-groups/{id}")
+    @DeleteMapping("/api/v1/private/dish-group/{id}")
     public ResponseEntity<ResponseData<Void>> deleteDishGroupById(@PathVariable(name = "id") Integer id) {
         ResponseData<Void> responseData = dishGroupService.deleteDishGroupById(id);
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
-    @GetMapping("/api/v1/private/dish-groups/{id}")
+    @GetMapping("/api/v1/private/dish-group/{id}")
     public ResponseEntity<ResponseData<DishGroupDTO>> getDishGroupById(@PathVariable(name = "id") Integer id) {
         ResponseData<DishGroupDTO> responseData = dishGroupService.getDishGroupById(id);
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
