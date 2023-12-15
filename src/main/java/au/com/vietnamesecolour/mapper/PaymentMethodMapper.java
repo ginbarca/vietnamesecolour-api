@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(uses = DishInfoMapper.class)
+@Mapper
 public interface PaymentMethodMapper {
 
     PaymentMethodMapper INSTANCE = Mappers.getMapper( PaymentMethodMapper.class );

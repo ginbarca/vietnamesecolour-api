@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  mysqldb:
+    platform: linux/x86_64
+    image: mysql:5.7
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_ROOT_USER=${MYSQL_ROOT_USER}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    ports:
+      - ${MYSQL_LOCAL_PORT}:${MYSQL_DOCKER_PORT}
+    volumes:
+      - db:/var/lib/mysql
+      - ./vncolour.sql:/docker-entrypoint-initdb.d/datadump.sql
+  app:
+    depends_on:
+      - mysqldb
+    build: ../vietnamesecolour-api
+    restart: on-failure
+    env_file: ./.env
+    ports:
+      - ${SPRING_LOCAL_PORT}:${SPRING_DOCKER_PORT}
+    environment:
+      - JDBC_DATABASE_USERNAME=${MYSQL_USER}
+      - JDBC_DATABASE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - JDBC_DATABASE_URL=jdbc:mysql://mysqldb:${MYSQL_DOCKER_PORT}/${MYSQL_DATABASE}?useSSL=false
+      - UPLOAD_DIR=${UPLOAD_DIR}
+    volumes:
+      - .m2:/root/.m2
+    stdin_open: true
+    tty: true
+
+volumes:
+  db:

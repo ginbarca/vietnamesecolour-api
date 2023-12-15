@@ -38,6 +38,8 @@ public class DishInfoDTO {
     @JsonView({ViewMode.Private.class})
     @NotNull(message = "Group ID must not be null")
     private Integer dishGroupId;
+
+    @JsonView({ViewMode.Private.class, ViewMode.Public.class})
     private String unitName;
 
     @JsonView({ViewMode.Private.class})
