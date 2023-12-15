@@ -1,6 +1,6 @@
--- MySQL dump 10.13  Distrib 8.0.34, for macos13 (arm64)
+-- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: vietnamesecolour
+-- Host: localhost    Database: vietnamesecolour
 -- ------------------------------------------------------
 -- Server version	5.5.5-10.4.28-MariaDB
 
@@ -156,6 +156,47 @@ INSERT INTO `dish_group` VALUES (1,'test group 1 edited 7','2023-11-28 13:36:05'
 UNLOCK TABLES;
 
 --
+-- Table structure for table `invoice`
+--
+
+DROP TABLE IF EXISTS `invoice`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `invoice` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `invoice_code` varchar(20) NOT NULL,
+  `order_id` int(11) DEFAULT NULL,
+  `pm_status_id` int(11) DEFAULT NULL,
+  `pm_method_id` int(11) DEFAULT NULL,
+  `created_time` datetime DEFAULT NULL,
+  `updated_time` datetime DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_invoice_created_by` (`created_by`),
+  KEY `fk_invoice_updated_by` (`updated_by`),
+  KEY `fk_invoice_order_id` (`order_id`),
+  KEY `fk_invoice_pm_status` (`pm_status_id`),
+  KEY `fk_invoice_pm_method` (`pm_method_id`),
+  CONSTRAINT `fk_invoice_created_by` FOREIGN KEY (`created_by`) REFERENCES `user_detail` (`id`),
+  CONSTRAINT `fk_invoice_order_id` FOREIGN KEY (`order_id`) REFERENCES `order_detail` (`id`),
+  CONSTRAINT `fk_invoice_pm_method` FOREIGN KEY (`pm_method_id`) REFERENCES `payment_method` (`id`),
+  CONSTRAINT `fk_invoice_pm_status` FOREIGN KEY (`pm_status_id`) REFERENCES `payment_status` (`id`),
+  CONSTRAINT `fk_invoice_updated_by` FOREIGN KEY (`updated_by`) REFERENCES `user_detail` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `invoice`
+--
+
+LOCK TABLES `invoice` WRITE;
+/*!40000 ALTER TABLE `invoice` DISABLE KEYS */;
+INSERT INTO `invoice` VALUES (69,'VNDL1702635681-69',9,3,1,'2023-12-15 17:21:21','2023-12-15 17:21:21',1,1),(70,'VNDL1702636132-65',9,1,1,'2023-12-15 17:28:52','2023-12-15 17:28:52',1,1),(71,'VNDL1702636132-71',9,1,1,'2023-12-15 17:28:52','2023-12-15 17:28:52',1,1),(72,'VNDL1702636132-72',9,1,1,'2023-12-15 17:28:52','2023-12-15 17:28:52',1,1),(73,'VNDL1702636132-73',9,1,1,'2023-12-15 17:28:52','2023-12-15 17:28:52',1,1),(74,'VNDL1702636132-74',9,1,1,'2023-12-15 17:28:52','2023-12-15 17:28:52',1,1),(75,'VNDL1702636143-75',9,1,1,'2023-12-15 17:29:03','2023-12-15 17:29:03',1,1),(76,'VNDL1702636143-76',9,1,1,'2023-12-15 17:29:03','2023-12-15 17:29:03',1,1),(77,'VNDL1702636143-77',9,1,1,'2023-12-15 17:29:03','2023-12-15 17:29:03',1,1),(78,'VNDL1702636143-78',9,1,1,'2023-12-15 17:29:03','2023-12-15 17:29:03',1,1),(79,'VNDL1702636143-79',9,1,1,'2023-12-15 17:29:03','2023-12-15 17:29:03',1,1),(80,'VNDL1702636304-1',9,3,1,'2023-12-15 17:31:44','2023-12-15 17:31:44',1,1),(81,'VNDL1702636377-81',9,3,1,'2023-12-15 17:32:57','2023-12-15 17:32:57',1,1),(82,'VNDL1702636457-80',9,1,1,'2023-12-15 17:34:17','2023-12-15 17:34:17',1,1),(83,'VNDL1702636457-83',9,1,1,'2023-12-15 17:34:17','2023-12-15 17:34:17',1,1),(84,'VNDL1702636457-84',9,1,1,'2023-12-15 17:34:17','2023-12-15 17:34:17',1,1),(85,'VNDL1702636457-85',9,1,1,'2023-12-15 17:34:17','2023-12-15 17:34:17',1,1),(86,'VNDL1702636457-86',9,1,1,'2023-12-15 17:34:17','2023-12-15 17:34:17',1,1),(87,'VNDL1702636470-87',9,1,1,'2023-12-15 17:34:30','2023-12-15 17:34:30',1,1),(88,'VNDL1702636470-88',9,1,1,'2023-12-15 17:34:30','2023-12-15 17:34:30',1,1),(89,'VNDL1702636470-89',9,1,1,'2023-12-15 17:34:30','2023-12-15 17:34:30',1,1),(90,'VNDL1702636470-90',9,1,1,'2023-12-15 17:34:30','2023-12-15 17:34:30',1,1),(91,'VNDL1702636470-91',9,1,1,'2023-12-15 17:34:30','2023-12-15 17:34:30',1,1),(92,'VNDL1702636471-92',9,1,1,'2023-12-15 17:34:31','2023-12-15 17:34:31',1,1),(93,'VNDL1702636471-93',9,1,1,'2023-12-15 17:34:31','2023-12-15 17:34:31',1,1),(94,'VNDL1702636471-94',9,1,1,'2023-12-15 17:34:31','2023-12-15 17:34:31',1,1),(95,'VNDL1702636471-95',9,1,1,'2023-12-15 17:34:31','2023-12-15 17:34:31',1,1),(96,'VNDL1702636471-96',9,1,1,'2023-12-15 17:34:31','2023-12-15 17:34:31',1,1);
+/*!40000 ALTER TABLE `invoice` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `order_detail`
 --
 
@@ -171,7 +212,8 @@ CREATE TABLE `order_detail` (
   `cust_address` varchar(450) DEFAULT NULL,
   `note` varchar(450) DEFAULT NULL,
   `discount` float DEFAULT NULL,
-  `total_amount` float DEFAULT NULL,
+  `subtotal` float DEFAULT NULL,
+  `total` float DEFAULT NULL,
   `order_date` date DEFAULT NULL,
   `order_time` varchar(45) DEFAULT NULL,
   `order_status_id` int(11) DEFAULT NULL,
@@ -191,7 +233,7 @@ CREATE TABLE `order_detail` (
   CONSTRAINT `fk_orddetail_status` FOREIGN KEY (`order_status_id`) REFERENCES `order_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_orddetail_type` FOREIGN KEY (`order_type_id`) REFERENCES `order_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_orddetail_updated_by` FOREIGN KEY (`updated_by`) REFERENCES `user_detail` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -200,7 +242,7 @@ CREATE TABLE `order_detail` (
 
 LOCK TABLES `order_detail` WRITE;
 /*!40000 ALTER TABLE `order_detail` DISABLE KEYS */;
-INSERT INTO `order_detail` VALUES (12,NULL,'aoigh skgh','agofi@skjdhg.co','1897518957','qrwtewet','note đơn tổng',0,73.8,'2022-10-23','13:22',1,1,'2023-12-12 22:47:23','2023-12-12 22:47:23',1,1);
+INSERT INTO `order_detail` VALUES (9,NULL,'jahsfbasjfj áh','kdshg@sklgd.ckag','124325235','123wg','ád',0.05,368,349.6,'4965-10-23','13:22',1,1,'2023-12-15 10:00:06','2023-12-15 10:00:07',NULL,NULL);
 /*!40000 ALTER TABLE `order_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -231,7 +273,7 @@ CREATE TABLE `order_dish` (
   CONSTRAINT `fk_orddish_dish_id` FOREIGN KEY (`dish_id`) REFERENCES `dish` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_orddish_order_id` FOREIGN KEY (`order_id`) REFERENCES `order_detail` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_orddish_updated_by` FOREIGN KEY (`updated_by`) REFERENCES `user_detail` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -240,7 +282,7 @@ CREATE TABLE `order_dish` (
 
 LOCK TABLES `order_dish` WRITE;
 /*!40000 ALTER TABLE `order_dish` DISABLE KEYS */;
-INSERT INTO `order_dish` VALUES (17,12,10,3,12.3,'note item 1','2023-12-12 22:47:23','2023-12-12 22:47:23',1,1),(18,12,11,3,12.3,'note item 2','2023-12-12 22:47:23','2023-12-12 22:47:23',1,1);
+INSERT INTO `order_dish` VALUES (13,9,1,3,100,'sp1','2023-12-15 10:00:07','2023-12-15 10:00:07',NULL,NULL),(14,9,2,2,34,'sp2','2023-12-15 10:00:07','2023-12-15 10:00:07',NULL,NULL);
 /*!40000 ALTER TABLE `order_dish` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -519,7 +561,7 @@ CREATE TABLE `token` (
   PRIMARY KEY (`id`),
   KEY `fk_token_user_id` (`user_id`),
   CONSTRAINT `fk_token_user_id` FOREIGN KEY (`user_id`) REFERENCES `user_detail` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -528,7 +570,7 @@ CREATE TABLE `token` (
 
 LOCK TABLES `token` WRITE;
 /*!40000 ALTER TABLE `token` DISABLE KEYS */;
-INSERT INTO `token` VALUES (1,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDYyNzYxOCwiZXhwIjoxNzAwNzE0MDE4fQ.s7LbDb17J9eh2PcRg1cvMBBnEdOE0EiP4mZ1HzfMVnw','BEARER',1,1,1),(2,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDYzMzc1OCwiZXhwIjoxNzAwNzIwMTU4fQ.rgGCqk-pZedy2o0wgtkh5nicufv8ulQgMGxkjGt1CGs','BEARER',1,1,1),(3,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDYzMzc2MSwiZXhwIjoxNzAwNzIwMTYxfQ.ipKBnTLywlsdjN9kyJa3BVHDwfsXMQJtbVDU7_PeeeA','BEARER',1,1,1),(4,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDYzNTMwNSwiZXhwIjoxNzAwNzIxNzA1fQ.RzhSWkMDaKBU1OvLdSpC152ulnP0BG-4Kps8rb6V4RI','BEARER',1,1,1),(5,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDYzNTY2NywiZXhwIjoxNzAwNzIyMDY3fQ.xenMR5DK8WeHLBp1iyIjmKTdFoLp7YmXTtxxD2OkI78','BEARER',1,1,1),(6,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDYzNTcxMCwiZXhwIjoxNzAwNzIyMTEwfQ.yWU0ZS7Tq5USSXERjhzSBxIqyF1pldsIaj3euHylLvc','BEARER',1,1,1),(7,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDYzNTc2MiwiZXhwIjoxNzAwNzIyMTYyfQ.y4r4rz-FstVHAkcOF_ElfPOGPOcFUjdrRWMnIJNz5_w','BEARER',1,1,1),(8,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDYzNTkzOSwiZXhwIjoxNzAwNzIyMzM5fQ.ColjQqMO4YmIBxPKMdmMe9OFhOy1XFLOuXuQhhF62VY','BEARER',1,1,1),(10,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDYzOTUyNSwiZXhwIjoxNzAwNzI1OTI1fQ.4_c81NNAUgA-dvbQfbdb0RxB9oHHWuBs7wRquFSec10','BEARER',1,1,1),(11,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDYzOTU5OSwiZXhwIjoxNzAwNzI1OTk5fQ.Y3o-5vLNliaGON83z2Bhq5wt7LLhpudtHblsfZcccoA','BEARER',1,1,1),(12,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDY0MjQzMCwiZXhwIjoxNzAwNzI4ODMwfQ.X_c9E18g2Uu1WZBOlTivQBn6IBo3D23Prjw3iLAAx6c','BEARER',1,1,1),(14,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0IiwiaWF0IjoxNzAwNjQ4ODU1LCJleHAiOjE3MDA3MzUyNTV9.3zMDEqF329eg9RcAG7ObpsW-VwP2Wnjesc52q0jjGn0','BEARER',1,1,8),(15,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MiIsImlhdCI6MTcwMDcxMDUyMywiZXhwIjoxNzAwNzk2OTIzfQ.zsNxepOq7X6p1tH7czm8DpFND5uh3s9mwAFnjgBJYeA','BEARER',1,1,9),(16,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDc5NTUxNSwiZXhwIjoxNzAwODgxOTE1fQ.O15iyCqYLUDTKqIV2ZjrdVKXRYT5ausoyLYyPA5R7fg','BEARER',1,1,1),(17,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDc5NTUzMiwiZXhwIjoxNzAwODgxOTMyfQ.-1RMarlJR4VgC_VvY9wYIrVKYzvtvktzMb0KGEUWu6g','BEARER',1,1,1),(18,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDc5NTYxOCwiZXhwIjoxNzAwODgyMDE4fQ.sB4Wf2lHoTksHiL8_7UoW3cJTXzTPfWqEDT-XJbhlM4','BEARER',1,1,1),(19,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDgxMzE1MywiZXhwIjoxNzAwODk5NTUzfQ.ZPiK7usjy4w7f2EJFaRWSjcrow6kVymIffZ5Yshg6OA','BEARER',1,1,1),(20,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTA1NzU5MSwiZXhwIjoxNzAxMTQzOTkxfQ.piHBsmdh-F0ysNwon9ThB7FNEn8iSriNhnSX4iaV2uc','BEARER',1,1,1),(21,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTE0NDc1OSwiZXhwIjoxNzAxMjMxMTU5fQ.yGN5OKM9244Jw8JUa4IASHp8xneGbtAjqH3Wve84dCY','BEARER',1,1,1),(22,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTE0NDc5NSwiZXhwIjoxNzAxMjMxMTk1fQ.aazQoD8HQsZOVaBxabvcAHAR-CJw9jH94h1GhF7IYwU','BEARER',1,1,1),(23,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTE0NDgxNSwiZXhwIjoxNzAxMjMxMjE1fQ.63KlqLumHjstH-ikxJthPLzBtVf3EQj4aJqIic5vDuY','BEARER',1,1,1),(24,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTE0NDg0MCwiZXhwIjoxNzAxMjMxMjQwfQ.q18rEyFGn-kk0BqMYl-pvZNw3_8BQVlzubDDfL0KNQo','BEARER',1,1,1),(25,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTE0NDkxMiwiZXhwIjoxNzAxMjMxMzEyfQ.MbikMV5CMa944LnVbS-FrKUNdDzlyP47H7nxUxX6e2U','BEARER',1,1,1),(26,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTE0NDkzMywiZXhwIjoxNzAxMjMxMzMzfQ.pSrAF8YECoHFbBR5VpRjJaZMhaaIit-sMqx42szVUYY','BEARER',1,1,1),(27,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTE0NDk1MiwiZXhwIjoxNzAxMjMxMzUyfQ.NUheME31pfd2M3la_FrjGGtoq2sD5a46IskEAge1vmw','BEARER',1,1,1),(28,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTE0NDk2MCwiZXhwIjoxNzAxMjMxMzYwfQ.xcSVin1GYNQFWwcugHFbfmN1mpUR-jT9eIOg2c5iD0M','BEARER',1,1,1),(29,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTE0NDk3MCwiZXhwIjoxNzAxMjMxMzcwfQ.PxUM2BgrZ9lYPwunkQr4xFgype4RvupQ8AZx2TGgaKI','BEARER',1,1,1),(30,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTE0NTcyNywiZXhwIjoxNzAxMjMyMTI3fQ.TcU8gWWiAgwevOvBqt17s6SRzc5hZwrhmifLHhpWZ2A','BEARER',1,1,1),(31,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTE1MzE2OSwiZXhwIjoxNzAxMjM5NTY5fQ.VyjD_QLq9YvR4M5MmTKBEq2SUCvr5KhJsUAxB7PbYzs','BEARER',1,1,1),(32,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTE2NzcwMiwiZXhwIjoxNzAxMjU0MTAyfQ.2FJqaKwN9lkWnaZJsr7_K3Xj18PCORaxwSBM82KyqNY','BEARER',1,1,1),(33,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0IiwiaWF0IjoxNzAxMjUzNTc4LCJleHAiOjE3MDEzMzk5Nzh9.Rw7pIywzFXkSkxIRumc1Y1np04fzo3TjPoHDZdIl8yc','BEARER',1,1,8),(34,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MiIsImlhdCI6MTcwMTI1MzU4NSwiZXhwIjoxNzAxMzM5OTg1fQ.PMzk1MzwkHsXQBCiGFPPhiF07Ub5QEYQGZuEMQsFI38','BEARER',1,1,9),(35,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0IiwiaWF0IjoxNzAxMjUzNjA3LCJleHAiOjE3MDEzNDAwMDd9.DhxRG86sTHuW6PU_oKIyahkPKafNG6b40lAYcO-LN0c','BEARER',0,0,8),(36,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MiIsImlhdCI6MTcwMTI1MzcwMiwiZXhwIjoxNzAxMzQwMTAyfQ.MpYWL3SaGTTmI3HwrU_Hjz5selucwGJOmFjuS8cevvE','BEARER',0,0,9),(37,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTM1OTY5MSwiZXhwIjoxNzAxNDQ2MDkxfQ.nfOYOCzmpWQJZeLwjlrDEKMi4IwQLLn4SAWPKbpXU-w','BEARER',1,1,1),(38,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTM1OTgzMywiZXhwIjoxNzAxNDQ2MjMzfQ.LbwzjFujW5pYXUl2HmrqmcQQ8RYXVnmHLHdDzdiPtOM','BEARER',1,1,1),(39,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTM1OTg1OSwiZXhwIjoxNzAxNDQ2MjU5fQ.EvFC89CrXNAm6UmtcDBtN8X7edPf9QW0jrdDeOazPgo','BEARER',1,1,1),(40,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTY1NjY4NywiZXhwIjoxNzAxNzQzMDg3fQ.kBwUBkoGiq6boDjuD8T8bNcd6oTepCFgmj0rBpzuqp0','BEARER',1,1,1),(41,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMjMwNzkxOCwiZXhwIjoxNzAyMzk0MzE4fQ.EVnTaSVUUCRlyEv4Xg9RZmvu38meqZ27tUbSP79jKpk','BEARER',1,1,1),(42,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMjM5NDg1NCwiZXhwIjoxNzAyNDgxMjU0fQ.RinupBX4Gx9BLGzP7RflHcKvI4d8Cf9ykMhQU_CDtiI','BEARER',0,0,1);
+INSERT INTO `token` VALUES (1,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDYyNzYxOCwiZXhwIjoxNzAwNzE0MDE4fQ.s7LbDb17J9eh2PcRg1cvMBBnEdOE0EiP4mZ1HzfMVnw','BEARER',1,1,1),(2,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDYzMzc1OCwiZXhwIjoxNzAwNzIwMTU4fQ.rgGCqk-pZedy2o0wgtkh5nicufv8ulQgMGxkjGt1CGs','BEARER',1,1,1),(3,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDYzMzc2MSwiZXhwIjoxNzAwNzIwMTYxfQ.ipKBnTLywlsdjN9kyJa3BVHDwfsXMQJtbVDU7_PeeeA','BEARER',1,1,1),(4,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDYzNTMwNSwiZXhwIjoxNzAwNzIxNzA1fQ.RzhSWkMDaKBU1OvLdSpC152ulnP0BG-4Kps8rb6V4RI','BEARER',1,1,1),(5,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDYzNTY2NywiZXhwIjoxNzAwNzIyMDY3fQ.xenMR5DK8WeHLBp1iyIjmKTdFoLp7YmXTtxxD2OkI78','BEARER',1,1,1),(6,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDYzNTcxMCwiZXhwIjoxNzAwNzIyMTEwfQ.yWU0ZS7Tq5USSXERjhzSBxIqyF1pldsIaj3euHylLvc','BEARER',1,1,1),(7,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDYzNTc2MiwiZXhwIjoxNzAwNzIyMTYyfQ.y4r4rz-FstVHAkcOF_ElfPOGPOcFUjdrRWMnIJNz5_w','BEARER',1,1,1),(8,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDYzNTkzOSwiZXhwIjoxNzAwNzIyMzM5fQ.ColjQqMO4YmIBxPKMdmMe9OFhOy1XFLOuXuQhhF62VY','BEARER',1,1,1),(10,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDYzOTUyNSwiZXhwIjoxNzAwNzI1OTI1fQ.4_c81NNAUgA-dvbQfbdb0RxB9oHHWuBs7wRquFSec10','BEARER',1,1,1),(11,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDYzOTU5OSwiZXhwIjoxNzAwNzI1OTk5fQ.Y3o-5vLNliaGON83z2Bhq5wt7LLhpudtHblsfZcccoA','BEARER',1,1,1),(12,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDY0MjQzMCwiZXhwIjoxNzAwNzI4ODMwfQ.X_c9E18g2Uu1WZBOlTivQBn6IBo3D23Prjw3iLAAx6c','BEARER',1,1,1),(14,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0IiwiaWF0IjoxNzAwNjQ4ODU1LCJleHAiOjE3MDA3MzUyNTV9.3zMDEqF329eg9RcAG7ObpsW-VwP2Wnjesc52q0jjGn0','BEARER',1,1,8),(15,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MiIsImlhdCI6MTcwMDcxMDUyMywiZXhwIjoxNzAwNzk2OTIzfQ.zsNxepOq7X6p1tH7czm8DpFND5uh3s9mwAFnjgBJYeA','BEARER',1,1,9),(16,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDc5NTUxNSwiZXhwIjoxNzAwODgxOTE1fQ.O15iyCqYLUDTKqIV2ZjrdVKXRYT5ausoyLYyPA5R7fg','BEARER',1,1,1),(17,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDc5NTUzMiwiZXhwIjoxNzAwODgxOTMyfQ.-1RMarlJR4VgC_VvY9wYIrVKYzvtvktzMb0KGEUWu6g','BEARER',1,1,1),(18,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDc5NTYxOCwiZXhwIjoxNzAwODgyMDE4fQ.sB4Wf2lHoTksHiL8_7UoW3cJTXzTPfWqEDT-XJbhlM4','BEARER',1,1,1),(19,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMDgxMzE1MywiZXhwIjoxNzAwODk5NTUzfQ.ZPiK7usjy4w7f2EJFaRWSjcrow6kVymIffZ5Yshg6OA','BEARER',1,1,1),(20,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTA1NzU5MSwiZXhwIjoxNzAxMTQzOTkxfQ.piHBsmdh-F0ysNwon9ThB7FNEn8iSriNhnSX4iaV2uc','BEARER',1,1,1),(21,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTE0NDc1OSwiZXhwIjoxNzAxMjMxMTU5fQ.yGN5OKM9244Jw8JUa4IASHp8xneGbtAjqH3Wve84dCY','BEARER',1,1,1),(22,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTE0NDc5NSwiZXhwIjoxNzAxMjMxMTk1fQ.aazQoD8HQsZOVaBxabvcAHAR-CJw9jH94h1GhF7IYwU','BEARER',1,1,1),(23,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTE0NDgxNSwiZXhwIjoxNzAxMjMxMjE1fQ.63KlqLumHjstH-ikxJthPLzBtVf3EQj4aJqIic5vDuY','BEARER',1,1,1),(24,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTE0NDg0MCwiZXhwIjoxNzAxMjMxMjQwfQ.q18rEyFGn-kk0BqMYl-pvZNw3_8BQVlzubDDfL0KNQo','BEARER',1,1,1),(25,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTE0NDkxMiwiZXhwIjoxNzAxMjMxMzEyfQ.MbikMV5CMa944LnVbS-FrKUNdDzlyP47H7nxUxX6e2U','BEARER',1,1,1),(26,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTE0NDkzMywiZXhwIjoxNzAxMjMxMzMzfQ.pSrAF8YECoHFbBR5VpRjJaZMhaaIit-sMqx42szVUYY','BEARER',1,1,1),(27,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTE0NDk1MiwiZXhwIjoxNzAxMjMxMzUyfQ.NUheME31pfd2M3la_FrjGGtoq2sD5a46IskEAge1vmw','BEARER',1,1,1),(28,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTE0NDk2MCwiZXhwIjoxNzAxMjMxMzYwfQ.xcSVin1GYNQFWwcugHFbfmN1mpUR-jT9eIOg2c5iD0M','BEARER',1,1,1),(29,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTE0NDk3MCwiZXhwIjoxNzAxMjMxMzcwfQ.PxUM2BgrZ9lYPwunkQr4xFgype4RvupQ8AZx2TGgaKI','BEARER',1,1,1),(30,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTE0NTcyNywiZXhwIjoxNzAxMjMyMTI3fQ.TcU8gWWiAgwevOvBqt17s6SRzc5hZwrhmifLHhpWZ2A','BEARER',1,1,1),(31,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTE1MzE2OSwiZXhwIjoxNzAxMjM5NTY5fQ.VyjD_QLq9YvR4M5MmTKBEq2SUCvr5KhJsUAxB7PbYzs','BEARER',1,1,1),(32,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTE2NzcwMiwiZXhwIjoxNzAxMjU0MTAyfQ.2FJqaKwN9lkWnaZJsr7_K3Xj18PCORaxwSBM82KyqNY','BEARER',1,1,1),(33,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0IiwiaWF0IjoxNzAxMjUzNTc4LCJleHAiOjE3MDEzMzk5Nzh9.Rw7pIywzFXkSkxIRumc1Y1np04fzo3TjPoHDZdIl8yc','BEARER',1,1,8),(34,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MiIsImlhdCI6MTcwMTI1MzU4NSwiZXhwIjoxNzAxMzM5OTg1fQ.PMzk1MzwkHsXQBCiGFPPhiF07Ub5QEYQGZuEMQsFI38','BEARER',1,1,9),(35,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0IiwiaWF0IjoxNzAxMjUzNjA3LCJleHAiOjE3MDEzNDAwMDd9.DhxRG86sTHuW6PU_oKIyahkPKafNG6b40lAYcO-LN0c','BEARER',0,0,8),(36,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MiIsImlhdCI6MTcwMTI1MzcwMiwiZXhwIjoxNzAxMzQwMTAyfQ.MpYWL3SaGTTmI3HwrU_Hjz5selucwGJOmFjuS8cevvE','BEARER',0,0,9),(37,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTM1OTY5MSwiZXhwIjoxNzAxNDQ2MDkxfQ.nfOYOCzmpWQJZeLwjlrDEKMi4IwQLLn4SAWPKbpXU-w','BEARER',1,1,1),(38,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTM1OTgzMywiZXhwIjoxNzAxNDQ2MjMzfQ.LbwzjFujW5pYXUl2HmrqmcQQ8RYXVnmHLHdDzdiPtOM','BEARER',1,1,1),(39,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTM1OTg1OSwiZXhwIjoxNzAxNDQ2MjU5fQ.EvFC89CrXNAm6UmtcDBtN8X7edPf9QW0jrdDeOazPgo','BEARER',1,1,1),(40,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMTY1NjY4NywiZXhwIjoxNzAxNzQzMDg3fQ.kBwUBkoGiq6boDjuD8T8bNcd6oTepCFgmj0rBpzuqp0','BEARER',1,1,1),(41,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMjM0ODc4NywiZXhwIjoxNzAyNDM1MTg3fQ.Ha2h5TChOFrKYc-m9EisVQ25SimvUFA-P9QjIeola48','BEARER',1,1,1),(42,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMjUxOTY4MiwiZXhwIjoxNzAyNjA2MDgyfQ.KWJke4nbajn8avVk6de7GkonryLSz6JmuNMEPDyWUGc','BEARER',1,1,1),(43,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMjUxOTc2MywiZXhwIjoxNzAyNjA2MTYzfQ.TLGVG35QE0pX5DqZ4EWmYvNi1iPNDdm8MwiJ5kTJPqA','BEARER',1,1,1),(44,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMjUyMjg0NywiZXhwIjoxNzAyNjA5MjQ3fQ.U_h2WJTH6Wrd-mwid00636yOobQsQGzEiy5vZsHsvto','BEARER',1,1,1),(45,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMjYxMzU3OSwiZXhwIjoxNzAyNjk5OTc5fQ.ZzCZwr8Kyqse45Pz8n4ecUj_hTR7OXQzu8dqGevTwk8','BEARER',1,1,1),(46,'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMjYyODIyNywiZXhwIjoxNzAyNzE0NjI3fQ.bXJvGNPhTPwusxtmbxB0x5f74_5uaF2GckZ4equDnq0','BEARER',0,0,1);
 /*!40000 ALTER TABLE `token` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -592,7 +634,7 @@ CREATE TABLE `user_detail` (
 
 LOCK TABLES `user_detail` WRITE;
 /*!40000 ALTER TABLE `user_detail` DISABLE KEYS */;
-INSERT INTO `user_detail` VALUES (1,'Test','Test','anhnv@nhsv.vn','admin','$2a$12$zhrAbElsfx4zm7zOPAnwhuLXozzIHE04P6FaAmb9DsapYubXau31a',NULL,NULL,1),(8,'alo',NULL,NULL,'test','$2a$10$xdn2iHmI5nu0.Ga8M0trHuC8NSvZ8l3MKA/vaMN68U7dOD3jTcHee',NULL,NULL,1),(9,'alo',NULL,NULL,'test2','$2a$10$.foB1a5ZABFVomEHpKmaY.Dj1Bk1Jl5SFJZ9Gt16dMpR7aXN5X0Xm',NULL,NULL,1);
+INSERT INTO `user_detail` VALUES (1,'Test','Test','anhnv@nhsv.vn','admin','$2a$12$5yHuPgnZ/sz1qjrCWYL6u.GqfOp3CGV0LdB9IM8Bc6eqvC/rES2Di',NULL,NULL,1),(8,'alo',NULL,NULL,'test','$2a$10$xdn2iHmI5nu0.Ga8M0trHuC8NSvZ8l3MKA/vaMN68U7dOD3jTcHee',NULL,NULL,1),(9,'alo',NULL,NULL,'test2','$2a$10$.foB1a5ZABFVomEHpKmaY.Dj1Bk1Jl5SFJZ9Gt16dMpR7aXN5X0Xm',NULL,NULL,1);
 /*!40000 ALTER TABLE `user_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -634,4 +676,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-13 23:44:31
+-- Dump completed on 2023-12-15 17:35:30
