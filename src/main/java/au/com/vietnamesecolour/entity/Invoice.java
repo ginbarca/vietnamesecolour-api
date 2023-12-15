@@ -11,23 +11,27 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "order_dish")
-public class OrderDish extends Auditable {
+@Table(name = "invoice")
+public class Invoice extends Auditable {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @Column(name = "invoice_code")
+    private String invoiceCode;
+
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id")
     private OrderDetail orderDetail;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "dish_id")
-    private DishInfo dishInfo;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "pm_status_id")
+    private PaymentStatus paymentStatus;
 
-    private Integer quantity;
-    private Float price;
-    private String note;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "pm_method_id")
+    private PaymentMethod paymentMethod;
+
 }
