@@ -40,6 +40,7 @@ public class TableBookingController {
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
+    @JsonView({ViewMode.Public.class})
     @PostMapping("/api/v1/public/table-bookings")
     public ResponseEntity<ResponseData<TableBookingDTO>> bookTable(
             @Valid @RequestBody TableBookingDTO bookingDTO
@@ -48,6 +49,7 @@ public class TableBookingController {
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
+    @JsonView({ViewMode.Private.class})
     @PostMapping("/api/v1/private/table-bookings")
     public ResponseEntity<ResponseData<TableBookingDTO>> createTableBooking(
             @Valid @RequestBody TableBookingDTO bookingDTO

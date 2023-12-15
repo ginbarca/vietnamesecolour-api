@@ -37,9 +37,16 @@ public class OrderController {
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
 
-    @JsonView({ViewMode.Public.class})
+    @JsonView({ViewMode.Private.class})
     @PostMapping("/private/orders")
     public ResponseEntity<ResponseData<OrderDetailDTO>> createOrder(@Valid @RequestBody OrderDetailDTO payload) throws ParseException {
+        ResponseData<OrderDetailDTO> responseData = comboService.createOrder(payload);
+        return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
+    }
+
+    @JsonView({ViewMode.Public.class})
+    @PostMapping("/public/orders")
+    public ResponseEntity<ResponseData<OrderDetailDTO>> makeOrder(@Valid @RequestBody OrderDetailDTO payload) throws ParseException {
         ResponseData<OrderDetailDTO> responseData = comboService.createOrder(payload);
         return ResponseUtils.status(responseData.getCode(), responseData.getMessage(), responseData.getData(), HttpStatus.valueOf(responseData.getCode()));
     }
