@@ -71,7 +71,8 @@ public class OrderServiceImpl implements OrderService {
                 .custAddress(payload.getCustAddress())
                 .note(payload.getNote())
                 .discount(payload.getDiscount())
-                .totalAmount(totalPrice)
+                .subtotal(totalPrice)
+                .total(totalPrice - totalPrice * payload.getDiscount())
                 .orderDate(DateUtils.parseDate(payload.getOrderDate(), DateConstant.STR_PLAN_DD_MM_YYYY))
                 .orderTime(payload.getOrderTime())
                 .orderStatus(orderStatusRepository.findById(payload.getOrderStatusId()).get())
@@ -120,7 +121,8 @@ public class OrderServiceImpl implements OrderService {
             ord.setCustAddress(payload.getCustAddress());
             ord.setNote(payload.getNote());
             ord.setDiscount(payload.getDiscount());
-            ord.setTotalAmount(totalPrice);
+            ord.setSubtotal(totalPrice);
+            ord.setTotal(totalPrice - totalPrice * payload.getDiscount());
             ord.setOrderDate(DateUtils.parseDate(payload.getOrderDate(), DateConstant.STR_PLAN_DD_MM_YYYY));
             ord.setOrderTime(payload.getOrderTime());
             ord.setOrderStatus(orderStatusRepository.findById(payload.getOrderStatusId()).get());

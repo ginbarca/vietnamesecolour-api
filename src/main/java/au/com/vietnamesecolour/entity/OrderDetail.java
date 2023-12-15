@@ -44,8 +44,11 @@ public class OrderDetail extends Auditable {
     @Column(name = "discount")
     private Float discount;
 
-    @Column(name = "total_amount")
-    private Float totalAmount;
+    @Column(name = "subtotal")
+    private Float subtotal;
+
+    @Column(name = "total")
+    private Float total;
 
     @Column(name = "order_date")
     private Date orderDate;

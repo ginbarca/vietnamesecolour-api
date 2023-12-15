@@ -47,7 +47,10 @@ public class OrderDetailDTO {
     private Float discount;
 
     @JsonView({ViewMode.Private.class, ViewMode.Public.class})
-    private Float totalAmount;
+    private Float subtotal;
+
+    @JsonView({ViewMode.Private.class, ViewMode.Public.class})
+    private Float total;
 
     @JsonView({ViewMode.Private.class, ViewMode.Public.class})
     @Pattern(regexp = "^(3[01]|[12][0-9]|0[1-9])-(1[0-2]|0[1-9])-[0-9]{4}$", message = "Invalid date")
