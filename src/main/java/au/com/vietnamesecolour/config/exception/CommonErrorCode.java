@@ -62,7 +62,15 @@ public enum CommonErrorCode implements AbstractError {
     RESET_PWD_TOKEN_EXPIRED(
             22,
             "Reset password token expired.",
-            HttpStatus.UNAUTHORIZED);
+            HttpStatus.UNAUTHORIZED),
+    CAPTCHA_VALID(
+            23,
+                    "Captcha valid.",
+            HttpStatus.OK),
+    CAPTCHA_INVALID(
+            24,
+                    "Captcha invalid.",
+            HttpStatus.BAD_REQUEST);
 
     private final int code;
 

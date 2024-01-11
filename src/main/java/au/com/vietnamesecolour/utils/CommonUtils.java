@@ -27,6 +27,11 @@ public class CommonUtils {
         return sb.toString();
     }
 
+    public static <T> T randomObj(T[] objects) {
+        Random r = new Random();
+        return objects[r.nextInt(objects.length)];
+    }
+
     public static <T> CompletableFuture<List<T>> allOf(List<CompletableFuture<T>> futuresList) {
         CompletableFuture<Void> allFuturesResult =
                 CompletableFuture.allOf(futuresList.toArray(new CompletableFuture[0]));
